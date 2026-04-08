@@ -1,0 +1,75 @@
+\begin{algorithm}[t]
+\label{lst:simulate_workflow_run}
+\caption{Workflow Run Simulation}
+\SetKwInOut{Parameter}{Parameters}
+\Parameter{\\
+    \var{$\mathcal{S}$} : Offloading strategy \\
+    \var{$J'_\text{off}$} : Set of jobs that must be offloaded
+    }
+
+\vspace{0.5em}
+
+%Initialize \var{job\_queue}, \var{deferred\_jobs} as empty queues\;
+%\vspace{0.2em}
+%Initialize \var{time\_left\_per\_job} as empty map\;
+%\vspace{0.2em}
+Load \var{DAG}, \var{predictions}, \var{Q} and set \var{$\hat{M'}$} to 0\;
+\vspace{0.5em}
+
+\While{there are unfinished jobs in \var{DAG}}{
+    \vspace{0.2em}
+    add newly runnable \var{job} from \var{DAG} to \var{Q}\;
+    %add newly runnable jobs $j \in \var{DAG}$ to \var{Q}\;
+    \vspace{0.2em}
+    \While{\var{Q} $\neq$ $\emptyset$}{
+        \vspace{0.2em}
+        %\var{job} $\gets$ \var{job\_queue}\func{.pop()}\;
+        \vspace{0.2em}
+        get \var{job} from \var{Q} and \func{assignJobToNode}(\var{job}, \var{$\mathcal{S}$}, \var{$J'_\text{off}$})\;
+        %\var{node} $\gets$ \func{assignJobToNode}(\var{job}, \var{$\mathcal{S}$}, \var{$J'_\text{off}$})\;
+        \vspace{0.2em}
+        \If{\var{node} is found}{
+            \vspace{0.2em}
+           %\tcp{map job to runtime prediction}
+            %\var{time\_left\_per\_job}[\var{job}] $\gets$ \var{predictions}[\var{job}]\; 
+            \var{remaining\_job\_runtimes} $\gets$ runtime prediction \var{$\hat{t}$} for \var{job}\;
+        }
+        \vspace{0.2em}
+        \Else{
+            \vspace{0.2em}
+            %\var{deferred\_jobs}\func{.push}(\var{job})\;
+            store \var{job} and add to \var{Q} in next scheduling interval;
+        }
+    }
+    %\vspace{0.2em}
+    %\var{job\_queue}\func{.push}(\var{deferred\_jobs})\;
+    %\vspace{0.2em}
+    %\var{deferred\_jobs}\func{.clear()}\;
+    %\vspace{0.2em}
+    %\If{\var{time\_left\_per\_job} not empty}{
+    \If{\var{remaining\_job\_runtimes} not empty}{
+        \vspace{0.2em}
+        %\var{time\_passed} $\gets$ min(\var{time\_left\_per\_job})\;
+        \var{step\_time} $\gets$ min(\var{remaining\_job\_runtimes})\;
+        update \var{$\hat{M'}$} by adding \var{step\_time}\;
+        %\vspace{0.2em}
+        %\var{$\hat{M'}$} $\gets$ \var{$\hat{M'}$} + \var{time\_passed}\;
+        %\vspace{0.2em}
+        %\var{newly\_finished\_job} $\gets$ argmin(\var{time\_left\_per\_job})\;
+        %\vspace{0.2em}
+        %\var{time\_left\_per\_job}.remove(\var{newly\_finished\_job})\;
+        %\vspace{0.2em}
+        \ForEach{\var{job} in \var{remaining\_job\_runtimes}}{
+            \vspace{0.2em}
+            %\var{time\_left\_per\_job}[\var{job}] $\gets$ \var{time\_left\_per\_job}[\var{job}] - \var{time\_passed}\;
+            update each \var{job} by \var{step\_time}\;
+        }
+        \vspace{0.2em}
+        reset resources of \var{node} that ran the latest \var{job} and remove from \var{DAG}\;
+        %\vspace{0.2em}
+        %mark \var{newly\_finished\_job} in \var{DAG} as finished\;
+    }
+}
+\vspace{0.2em}
+\Return \var{$\hat{M'}$}, all offloaded jobs, all jobs deferred at least once\;
+\end{algorithm}

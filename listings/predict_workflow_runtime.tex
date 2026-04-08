@@ -1,0 +1,66 @@
+\let\oldemph\emph
+\renewcommand{\emph}[1]{#1}
+
+\begin{algorithm}[H]
+
+\caption{Predict Workflow Runtime}
+
+\SetKwInOut{Parameter}{Parameters}
+\Parameter{\\
+    \var{deadline} : Maximum runtime of workflow given by user\\
+    \var{strategy} : Offloading strategy selected by user 
+    }
+
+\vspace{0.8em}
+\var{runtime\_estimate}, \var{offloaded\_jobs}, \var{deferred\_jobs} $\gets$ \func{simulateWorkflowRun}(\var{strategy}, $\emptyset$)\;
+
+\vspace{0.2em}
+\If{\var{strategy} implies approaching \var{deadline}}{
+    
+    \vspace{0.2em}
+    \If{\var{runtime\_estimate} $\leq$ \var{deadline}}{
+        \tcp{Deadline is met without offloading}
+        \Return \var{runtime\_estimate}, \var{offloaded\_jobs}\;
+    }
+
+    \vspace{0.2em}
+    \Else{
+
+        \vspace{0.2em}
+        \While{\var{runtime\_estimate} $>$ \var{deadline}}{
+
+            \vspace{0.2em}
+            \var{not\_yet\_offloaded\_jobs} $\gets$ \var{deferred\_jobs} $\setminus$ \var{offloaded\_jobs}\;
+
+            \vspace{0.2em}
+            \If{\var{not\_yet\_offloaded\_jobs} $\neq$ $\emptyset$}{
+
+                \vspace{0.2em}
+                \var{next\_job\_to\_offload} $\gets$ maximum of \var{not\_yet\_offloaded\_jobs}, sorted according to \var{strategy};\\
+
+                \vspace{0.2em}
+                \var{runtime\_estimate}, \var{offloaded\_jobs}, \var{deferred\_jobs} $\gets$ \func{simulateWorkflowRun}(\var{strategy}, \var{offloaded\_jobs} $\cup$ \{\var{next\_job\_to\_offload}\})\;
+            }
+
+            \vspace{0.2em}
+            \Else{
+                \tcp{Deadline cannot be met}
+                \Return \var{runtime\_estimate}, \var{offloaded\_jobs}\;
+            }
+        }
+
+        \vspace{0.2em}
+        \tcp{Deadline is met}
+        \Return \var{runtime\_estimate}, \var{offloaded\_jobs}\;
+    }
+
+}
+\vspace{0.2em}
+\Else{
+    \tcp{No offloading or primary occupied offloading}
+    \Return \var{runtime\_estimate}, \var{offloaded\_jobs}\;
+}
+
+\end{algorithm}
+
+\let\emph\oldemph

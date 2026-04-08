@@ -1,0 +1,31 @@
+\begin{algorithm}[h]
+\label{lst:predict_workflow_makespan}
+\caption{Workflow Makespan Prediction}
+\SetKwInOut{Parameter}{Parameters}
+\Parameter{\\
+    \var{$D$} : Deadline (maximum makespan) \\
+    \var{$\mathcal{S}$} : Offloading strategy \\
+    }
+
+\If{\var{$\mathcal{S}$} is deadline-aware}{
+    \var{$J'_\text{off}$} $\gets$ $\emptyset$\;
+
+    \var{$\hat{M}$}, \var{$J^{\mathcal{S}}_\text{off}$}, \var{$J_{\text{def}}$} $\gets$
+    \func{simulateWorkflowRun}(\var{$\mathcal{S}$}, \var{$J'_\text{off}$})\;
+    \While{\var{$\hat{M}$} $>$ \var{$D$}}{
+
+        \If{\var{$J_{\text{def}}$} $\setminus$ \var{$J'_\text{off}$} $=$ $\emptyset$}{
+            break\;
+        }
+        update \var{$J'_\text{off}$} by selecting job from \var{$J_{\text{def}}$} $\setminus$ \var{$J'_\text{off}$}\;
+        \func{simulateWorkflowRun}(\var{$\mathcal{S}$}, \var{$J'_\text{off}$})\;
+        update \var{$\hat{M}$} with \var{$\hat{M'}$} and \var{$J^{\mathcal{S}}_\text{off}$} with \var{$J'^{\mathcal{S}}_\text{off}$}\;
+    }
+}
+\Else{
+    \var{$\hat{M}$}, \var{$J^{\mathcal{S}}_\text{off}$}, \var{$J_{\text{def}}$} $\gets$
+    \func{simulateWorkflowRun}(\var{$\mathcal{S}$}, None)\;
+}
+
+\Return \var{$\hat{M}$}, \var{$J^{\mathcal{S}}_\text{off}$}\;
+\end{algorithm}

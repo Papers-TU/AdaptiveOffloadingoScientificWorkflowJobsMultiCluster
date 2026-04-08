@@ -1,0 +1,12 @@
+In this paper, we propose a method that offloads scientific workflow jobs between multi-cluster environments to meet user-defined deadlines.
+To this end, we use historical data to train regression models that predict job runtimes from input size and then simulate DAG execution to estimate makespan and cost for two deadline-aware and one deadline-agnostic offloading strategies.
+We implemented our method in Snakemake and evaluated it on three real bioinformatic workflows in Kubernetes clusters. 
+The results show reduced makespans of up to 36.51\% compared to single-cluster executions and makespan prediction errors ranging from 0.21 to 16.88\%. On average, makespan deadlines are met with an average margin of 14 minutes, while achieving cost reductions of approximately 52\% compared to naive offloading.
+
+While we demonstrated the feasibility of our method, future work should focus on reducing the prediction errors caused by uncertainties during runtime.
+By incorporating richer execution-state features and employing non-linear, online learning models, we plan to alleviate this limitation and facilitate dynamic, runtime re-evaluation of offloading decisions \cite{da_silva_online_2015, hilman_task_2018} to guaranty deadline constraints. 
+To account for heterogeneous execution environments, we plan to extend our predictions with the approach of Bader~et~al.~\cite{bader_lotaru_2022, bader_lotaru_2024}. 
+Further refinements of the offloading criterion could target adverse operating conditions such as high network latency and include power and CO\textsubscript{2} metrics to enable environmentally sustainable multi-cluster offloading.
+
+
+

@@ -1,0 +1,60 @@
+\begin{algorithm}[H]
+\caption{Workflow Makespan Prediction using Runtime Simulation}
+\SetKwInOut{Parameter}{Parameters}
+\Parameter{\\
+    \var{$D$} : Deadline (maximum makespan of workflow) \\
+    \var{$\mathcal{S}$} : Offloading strategy \\
+    }
+
+
+\If{\var{$\mathcal{S}$} is deadline-aware}{
+    \vspace{0.2em}
+    \var{$J'_\text{off}$} $\gets$ $\emptyset$\; %\tcp{Assume $J^{\mathcal{S}}_\text{off}$ is the empty set}
+
+    \vspace{0.2em}
+    \var{$\hat{M}$}, \var{$J^{\mathcal{S}}_\text{off}$}, \var{$J_{\text{def}}$} $\gets$ \func{simulateWorkflowRun}(\var{$\mathcal{S}$}, \var{$J'_\text{off}$})\;
+
+        \vspace{0.2em}
+        \tcp{If $\hat{M} \leq D$, $D$ is met without offloading and loop is skipped}
+
+        \While{\var{$\hat{M}$} $>$ \var{$D$}}{
+
+            \vspace{0.2em}
+            \If{\var{$J_{\text{def}}$} $\setminus$ \var{$J'_\text{off}$} $\neq$ $\emptyset$}{
+
+                \vspace{0.2em}
+                \var{next\_job\_to\_offload} $\gets$ select job from \var{$J_{\text{def}}$} $\setminus$ \var{$J'_\text{off}$} according to \var{$\mathcal{S}$};\\
+
+                \vspace{0.2em}
+                \var{$J'_\text{off}$} $\gets$ \var{$J'_\text{off}$} $\cup$ \{\var{next\_job\_to\_offload}\}\;
+
+                \vspace{0.2em}
+                \var{$\hat{M}'$}, \var{$J'_\text{off}$}, \var{$J_{\text{def}}$} $\gets$ \func{simulateWorkflowRun}(\var{$\mathcal{S}$}, \var{$J'_\text{off}$})\;
+
+                \vspace{0.2em}
+                \If{\var{$\hat{M}'$} $<$ \var{$\hat{M}$}}{
+                    \tcp{Improved prediction; update best known solution}
+                    \var{$\hat{M}$} $\gets$ \var{$\hat{M}'$}\;
+                    \vspace{0.2em}
+                    \var{$J^{\mathcal{S}}_\text{off}$} $\gets$ \var{$J'_\text{off}$}\;
+                }
+            }
+
+            \vspace{0.2em}
+            \Else{
+                \tcp{D cannot be met; best effort is still returned}
+                break\;
+            }
+
+    }
+
+}
+\vspace{0.2em}
+\Else{
+    \vspace{0.2em}
+    \tcp{Offloaded jobs are selected implicitly based on $\mathcal{S}$}
+    \var{$\hat{M}$}, \var{$J^{\mathcal{S}}_\text{off}$}, \var{$J_{\text{def}}$} $\gets$ \func{simulateWorkflowRun}(\var{$\mathcal{S}$}, None)\;
+}
+\vspace{0.2em}
+\Return \var{$\hat{M}$}, \var{$J^{\mathcal{S}}_\text{off}$}\;
+\end{algorithm}

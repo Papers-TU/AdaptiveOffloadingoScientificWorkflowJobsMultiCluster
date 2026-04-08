@@ -1,0 +1,110 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+%\usepackage{algorithmic}
+%TODO: Darf man das nutzen bei IEEE?
+\usepackage{mathtools}
+\usepackage{comment}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{acronym}
+\usepackage{url}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{diagbox}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\newcommand{\code}[1]{\texttt{#1}}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+
+% custom macros used in algorithms
+\newcommand{\var}[1]{#1}
+\newcommand{\func}[1]{\texttt{#1}}
+
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref} % load last
+\Urlmuskip=0mu plus 1mu\relax
+\def\UrlBreaks{\do\/\do-\do\_}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+
+\pdfobjcompresslevel=0
+\pdfminorversion=4
+\hypersetup{pdfcreator={}, pdfproducer={}}
+    
+\begin{document}
+
+\title{Adaptive Offloading
+of Scientific Workflow Jobs
+Across Multi-Cluster Environments}
+
+\author{
+    %\IEEEauthorblockN{\IEEEauthorrefmark{1}, \IEEEauthorrefmark{1}, \IEEEauthorrefmark{1},}
+
+    \IEEEauthorblockA{
+    Anonymous Authors
+        %\{firstname.lastname\}@tu-berlin.de, Technische Universität Berlin, Germany\\
+    }
+
+
+}
+
+%\IEEEpubid{\makebox[\columnwidth]{*equal contribution, alphabetical order \hfill} \hspace{\columnsep}\makebox[\columnwidth]{ }}
+
+\maketitle
+
+\begin{abstract}
+\input{sections/0_abstract}
+\end{abstract}
+
+% from other papers
+% Energy measurement, Supercomputers, Microprocessors, Multicore processing, Load modeling, High performance computing, Cluster computing, Power measurement, Software evaluation, Experimental comparison, DC power consumption, processor power, power model, multicore processor, processor workload analysis, processor power consumption estimation
+
+% TODO: Refine
+\begin{IEEEkeywords}
+Job Offloading, Scientific Workflow, Cloud Computing, Machine Learning, Deadline Constraint, Cost Optimization
+\end{IEEEkeywords}
+
+\section{Introduction} % 1/2 Seite
+\label{sec:introduction}
+\input{sections/1_introduction}
+
+\section{Problem Formulation}
+\label{sec:problem}
+\input{sections/2_problem}
+
+\section{Approach}
+\label{sec:approach}
+\input{sections/3_approach}
+
+\section{Evaluation} 
+\label{sec:evaluation}
+\input{sections/4_evaluation}
+
+\section{Discussion}
+\label{sec:discussion}
+\input{sections/5_discussion}
+
+
+\section{Related Work}
+\label{sec:relatedwork}
+\input{sections/6_relatedwork}
+
+\section{Conclusion}
+\label{sec:conc}
+\input{sections/7_conclusion}
+
+\section*{Acknowledgments}
+%\thanks{Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) as FONDA (Project 414984028, SFB 1404).}
+\thanks{The acknowledgments are omitted for double-blind submission.}
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{bibliography}
+
+
+
+\end{document}

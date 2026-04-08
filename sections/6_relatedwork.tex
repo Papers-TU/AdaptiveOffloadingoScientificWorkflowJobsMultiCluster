@@ -1,0 +1,25 @@
+This Section reviews scientific literature related to this paper.
+We focus on two main areas: runtime prediction of scientific workflow jobs and offloading of jobs, in particular within heterogeneous distributed computing environments.
+
+\subsection{Job Runtime Prediction}
+Many approaches for runtime prediction of scientific workflow jobs have been proposed, varying in model type and complexity, features selected, and whether they rely on offline training or online updates.
+
+Da Silva et al. \cite{da_silva_online_2015} estimate job runtime and resource usage based on the size of the input data. The method uses historical data to identify correlations between input size and job parameters (including runtime), and continuously updates models during workflow execution. If no clear correlation is found, a density-based clustering algorithm partitions the profiling data to isolate consistent subsets with more predictable behavior.
+
+Hilman et al. \cite{hilman_task_2018} propose an online incremental learning approach for adapting performance variability in cloud-based multi-tenant Workflow as a Service platforms. They lower the runtime prediction error by continuously updating the online incremental model with new execution data, leveraging time-series monitoring data (CPU, memory, I/O) and features extracted via time-reversal asymmetry statistics.
+
+The work by Bader et al. \cite{bader_lotaru_2024, bader_lotaru_2022} focuses on improving the absolute prediction error and predict workflow job runtime on heterogeneous clusters without relying on historical data. They profile node microbenchmarks (CPU, memory, and I/O) and then execute locally on downsampled input data to obtain job-specific metrics such as input size and runtime. Using these metrics, the method models the relationship between input size and runtime, providing prediction uncertainty estimates useful for scheduling.
+
+Balis et al. \cite{balis_evaluation_2023,balis_improving_2024} investigate and conduct an empirical evaluation of ML-based runtime prediction for scientific workflow jobs, concluding that two-stage pipelines for job runtime prediction generally improve accuracy. In the first stage, intermediate job parameters (e.g., mean CPU usage, used memory, total read bytes) are predicted and then used as features in the second stage to predict job runtime. 
+
+
+\subsection{Job Offloading}
+Various approaches for workflow job offloading have been proposed, particularly in fog and mobile cloud computing. 
+
+In mobile cloud computing, Zhang et al. \cite{zhang_task_2017} investigate offloading for scientific workflows in Mobile Cloud Computing, where resource-constrained smart mobile devices (SMDs) use cloud infrastructures for computation- and data-intensive jobs. They define a cost model for VM utilization in Infrastructure as a Service clouds and propose a genetic algorithm on SMDs to map workflow jobs between cloud VMs and SMDs. Standard genetic operators (encoding, crossover, mutation, population initialization) are adapted to workflow offloading, and data placement constraints (e.g., due to privacy) are handled by enforcing local execution of affected jobs. Thus achieving near-optimal monetary cost and SMD energy consumption while satisfying deadline and data placement constraints. 
+
+Similarly, Wang et al. \cite{wang_energy-efficient_2019} address mobile device energy consumption with a deadline-aware job offloading strategy for mobile cloud workflows. Their decision model selects local execution or cloud offloading based on job characteristics (e.g., transmission data size, workload) and the dynamic wireless channel state, whose fluctuations strongly affect offloading energy efficiency.
+
+Shukla et al. \cite{shukla_fat-eto_2023} propose FAT-ETO, a rank-based task offloading algorithm for heterogeneous fog–cloud environments that integrates fuzzy logic with multi-criteria decision-making. By ranking edge devices, fog nodes, and cloud nodes for each workflow job based on weighted decision criteria, they show that FAT-ETO reduces makespan and energy consumption compared to existing heuristics, at the expense of slightly higher cost, particularly effective for workflows with many jobs. 
+
+Kaur et al. \cite{kaur_focalb_2021}, introduce FOCALB, a fog computing–based architectural model and load-balancing framework designed to offload scientific workflow jobs across fog–cloud infrastructures. In contrast to FAT-ETO, FOCALB assumes that workflow jobs are submitted from user endpoint devices and executed only on fog nodes and cloud servers. With hierarchical scheduling, jobs are first assigned to nearby fog nodes to reduce network overhead, and the utilization layer is continuously monitored. When resource capacity limits are exceeded, and deadlines permit, jobs are selectively offloaded to cloud servers. A dedicated load-balancing module redistributes jobs among fog nodes within a cluster to ensure fair reutilization and avoid overload condition, thus optimizing both makespan and energy consumption.

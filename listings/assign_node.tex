@@ -1,0 +1,37 @@
+\let\oldemph\emph
+\renewcommand{\emph}[1]{#1}
+
+\begin{algorithm}[h]
+\label{lst:assign_node}
+\caption{Node Assignment}
+
+\SetKwInOut{Parameter}{Parameters}
+\Parameter{
+    \var{job}: Job to be assigned \\
+    \var{$\mathcal{S}$}: Offloading strategy \\
+    \var{$J'_\text{off}$}: Set of jobs that must be offloaded
+}
+
+\BlankLine
+\If{\var{$\mathcal{S}$} is deadline-aware}{
+    \If{\var{job} in \var{$J'_\text{off}$}}{
+        \var{node} $\gets$ \func{assignToPrimaryCluster}(\var{job})\;
+    }
+    \Else{
+        \var{node} $\gets$ \func{assignToSecondaryCluster}(\var{job})\;
+    }
+}
+\Else{
+    \tcp{$\mathcal{S}$ is deadline-agnostic or inactive offloading}
+    \If{offloading criterion is met for \var{job}}{
+        \var{node} $\gets$ \func{assignToSecondaryCluster}(\var{job})\;
+    }
+    \Else{
+        \var{node} $\gets$ \func{assignToPrimaryCluster}(\var{job})\;
+    }
+}
+
+\BlankLine
+\Return \var{node}
+\end{algorithm}
+

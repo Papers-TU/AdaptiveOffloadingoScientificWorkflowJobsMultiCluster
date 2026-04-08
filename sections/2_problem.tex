@@ -1,0 +1,19 @@
+As described in Section \ref{sec:introduction}, we intend to optimize the runtime of scientific workflows by offloading jobs to secondary clusters or the cloud. 
+
+In a SWMS, a workflow is represented as a directed acyclic graph (DAG). A task denotes a logical step in the workflow DAG, while a job refers to a concrete execution instance of that task with specific inputs and outputs. 
+
+The user sets a maximum allowed makespan (deadline) for the workflow. Executing jobs in the secondary execution environment incurs a monetary cost, while execution in the primary environment does not, as it corresponds to locally operated cluster infrastructure with fixed, pre-existing operational costs independent of individual workflow executions. 
+
+The problem can be formulated as follows. 
+\vspace{0.5em} 
+Let: \begin{itemize} \item $J = \{j_1, j_2, \dots, j_n\}$ be the set of jobs of a scientific workflow. \item $J_{\text{off}} \subseteq J$ denote the subset of jobs that are offloaded to the secondary environment; the remaining jobs $J \setminus J_{\text{off}}$ are executed in the primary environment. \item $M(J_{\text{off}}) \in \mathbb{R}_{\geq 0}$ denote the makespan of the workflow when jobs in $J_{\text{off}}$ are offloaded. \item $D \in \mathbb{R}_{\geq 0}$ be the maximum allowed makespan (deadline). \item $C(J_{\text{off}}) \in \mathbb{R}_{\geq 0}$ denote the cost associated with offloading the jobs in $J_{\text{off}}$. \end{itemize} \vspace{0.7em} The goal is to find a subset of jobs $J_{\text{off}}^* \subseteq J$ such that: \[ M(J_{\text{off}}^*) \leq D \] \hspace{1em}and \[ J_{\text{off}}^* = \arg\min_{J_{\text{off}} \subseteq J,\ M(J_{\text{off}}) \leq D} C(J_{\text{off}}). \] \vspace{0.7em}
+
+In other words, the objective of this constrained combinatorial optimization is to find a feasible offloading configuration that aims for completion within deadline $D$. Among all feasible configurations, the one with the lowest cost is sought. 
+
+Additionally, we consider the following assumptions:
+
+\begin{itemize}[label={}]
+    \item (\textbf{A1}) Our runtime prediction approach does not yet account for differences in hardware configurations, thus we assume primary and secondary execution environments have identical or negligibly different hardware.
+    \item (\textbf{A2}) We need historical execution traces with job runtimes and input sizes for model training.
+    \item (\textbf{A3}) Workflow configuration parameters (for e.g. the algorithm a job uses) affecting runtime have remained constant.
+\end{itemize}
