@@ -1,0 +1,115 @@
+% Overview of the multi-cluster scenario (TikZ version of 011026_overview_BigData.jpg).
+% Requires: \usepackage{tikz} and \usetikzlibrary{arrows.meta,calc,shapes.geometric}
+% Coordinates are in pixels of the original 960x540 sketch (y axis points down).
+\begin{tikzpicture}[
+    x=0.02cm, y=-0.02cm,
+    font=\sffamily,
+    box/.style={draw=black!75, fill=black!6, rounded corners=4pt, line width=0.8pt},
+    job/.style={draw=#1!80!black, fill=#1!15, rounded corners=1.5pt, line width=0.7pt,
+                minimum width=1.74cm, minimum height=0.48cm, inner sep=0pt, font=\sffamily\Large},
+    job/.default=jobgreen,
+    flow/.style={dashed, line width=0.8pt, -{Latex[length=6pt]}},
+    lbl/.style={font=\sffamily\bfseries\large},
+  ]
+  \definecolor{jobgreen}{HTML}{2E8B6E}
+  \definecolor{joblilac}{HTML}{6B62C9}
+  \definecolor{joborange}{HTML}{D9902A}
+  \definecolor{jobgrey}{HTML}{A8A89A}
+  \definecolor{wfred}{HTML}{EA9999}
+  \definecolor{k8sblue}{HTML}{326CE5}
+  \definecolor{smkgreen}{HTML}{039475}
+
+  % ---------------------------------------------------------------- clusters
+  \draw[box] (2,83) rectangle (438,197);
+  \node[font=\sffamily\bfseries\Large] at (215,105) {On-premises Cluster};
+  \node[job]          at (111,145) {align};
+  \node[job=joblilac] at (219,145) {call};
+  % server rack icon
+  \foreach \y in {95,118,141}
+    \fill[black, rounded corners=1pt] (345,\y) rectangle (410,\y+19);
+  \foreach \y in {95,118,141}
+    \fill[white] (390,\y+7) rectangle (404,\y+12);
+
+  \draw[box] (522,83) rectangle (955,197);
+  \node[font=\sffamily\bfseries\Large] at (690,105) {Shared HPC / Cloud};
+  \node[job=joblilac] at (616,145) {merge};
+  \node[job]          at (725,145) {report};
+  % cloud storage icon
+  \fill[black, rounded corners=4pt] (857,95) rectangle (937,160);
+  \fill[white] (870,128) rectangle (924,134);
+  \fill[white] (876,148) circle (3) (888,148) circle (3);
+  \fill[white] (920,148) circle (2.5);
+  \fill[white] (874,122) to[out=180,in=180,looseness=1.6] (884,108)
+               to[out=90,in=180] (900,100) to[out=0,in=110] (914,108)
+               to[out=0,in=0,looseness=1.6] (920,122) -- cycle;
+  \fill[black] (885,119) to[out=90,in=180] (900,108) to[out=0,in=90] (912,119) -- cycle;
+
+  % ---------------------------------------------------------------- jobs in transit
+  \draw[line width=0.8pt] (218,197) |- (245,192);
+  \draw[line width=0.8pt] (332,192) -- (340,192);
+  \draw[line width=0.8pt] (428,192) -- (502,192);
+  \draw[line width=0.8pt] (590,192) -| (605,197);
+  \draw[line width=0.8pt] (475,192) -- (475,215);
+  \node[job]          at (288,193) {align};
+  \node[job=joblilac] at (384,193) {call};
+  \node[job]          at (546,193) {sort};
+
+  % ---------------------------------------------------------------- executor
+  \draw[box] (92,215) rectangle (860,264);
+  \node[font=\sffamily\bfseries\Large] at (460,240) {Snakemake Kubernetes Executor};
+  % Snakemake logo (simplified)
+  \node[text=smkgreen, font=\sffamily\bfseries\Huge] at (248,241) {S};
+  % Kubernetes logo (simplified helm wheel)
+  \node[regular polygon, regular polygon sides=7, fill=k8sblue, minimum size=0.82cm,
+        inner sep=0pt] (k8s) at (683,240) {};
+  \draw[white, line width=1.2pt] (683,240) circle (9);
+  \foreach \a in {90,141.4,...,450}
+    \draw[white, line width=1.2pt] (683,240) -- ++(\a:14);
+  \fill[white] (683,240) circle (2.5);
+  \node[lbl, align=center, font=\sffamily\bfseries\normalsize] at (815,240) {Job-to-\\Cluster Map};
+
+  % ---------------------------------------------------------------- SOU
+  \draw[box] (92,277) rectangle (860,363);
+  \node[font=\sffamily\bfseries\Large] at (476,294) {SOU};
+  % model icon
+  \coordinate (n1) at (456,327); \coordinate (n2) at (456,345);
+  \coordinate (h1) at (476,318); \coordinate (h2) at (476,336); \coordinate (h3) at (476,354);
+  \coordinate (o1) at (496,336);
+  \foreach \s in {n1,n2} \foreach \t in {h1,h2,h3} \draw[line width=0.6pt] (\s) -- (\t);
+  \foreach \s in {h1,h2,h3} \draw[line width=0.6pt] (\s) -- (o1);
+  \foreach \c in {n1,n2,h1,h2,h3,o1} \filldraw[fill=white, line width=0.7pt] (\c) circle (6);
+
+  \node[lbl] at (270,312) {Runtime Prediction Model};
+  \node[lbl, align=center, font=\sffamily\bfseries\normalsize] at (650,308) {Simulating offloaded Jobs until\\Time-to-Result is met};
+
+  % ---------------------------------------------------------------- workflow
+  \draw[box, fill=wfred, draw=wfred!60!black] (92,380) rectangle (860,508);
+  \node[font=\sffamily\bfseries\Large] at (476,425) {Large-Scale Data Analysis Workflow};
+  \node[font=\sffamily\Large] at (466,452) {100s--1000s of interdependent jobs};
+  \node[job]           (wa) at (157,481) {align};
+  \node[job=joblilac]  (wc) at (259,481) {call};
+  \node[job]                at (361,481) {sort};
+  \node[job=joborange]      at (462,481) {index};
+  \node[job=joblilac]       at (564,481) {merge};
+  \node[job]                at (666,481) {report};
+  \node[job=jobgrey]        at (767,481) {$\cdots$};
+
+  % ---------------------------------------------------------------- data flow
+  \draw[dashed, line width=0.8pt] (wa.north) |- (258,337);
+  \draw[flow] (wc.north) |- (448,337);
+  \node[lbl, rotate=90] at (139,412) {Input Data};
+  \node[lbl, rotate=90] at (241,412) {Runtime};
+  \fill (502,336) circle (3);
+  \draw[dashed, line width=0.8pt] (502,336) -- (768,336);
+  \draw[flow] (768,336) |- (722,240);
+
+  % ---------------------------------------------------------------- scientist
+  \node[font=\sffamily\bfseries\Large] at (910,402) {Scientist};
+  \draw[line width=1pt] (897,437) circle (12);
+  \draw[line width=1pt] (875,475) to[out=90,in=180] (897,452) to[out=0,in=90] (919,470);
+  \fill[black, rounded corners=2pt] (902,458) rectangle (950,488);
+  \fill[white] (906,462) rectangle (946,482);
+  \fill[black] (920,488) rectangle (932,494) (912,494) rectangle (940,497);
+  \draw[flow] (915,500) |- (476,520) -- (476,509);
+  \node[lbl] at (720,532) {User-defined Time-to-Result};
+\end{tikzpicture}
