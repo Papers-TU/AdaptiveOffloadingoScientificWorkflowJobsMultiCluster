@@ -1,8 +1,11 @@
-Scientific workflows orchestrate complex data analyses on large, compute-intensive datasets that often exceed the capacity of a single computer or even a single cluster.
-Offloading jobs across multiple clusters can alleviate resource constraints and shorten execution time while controlling cost. 
+Scientific workflows increasingly demand short turnaround times for scientific results, while complex analytical workloads can exceed the capacity of a single compute cluster.
+%Offloading jobs across multiple clusters can alleviate resource constraints and shorten execution time while controlling cost. 
 
-This paper proposes adaptive offloading of workflow jobs in multi-cluster environments to meet user-defined makespan deadlines while minimizing execution costs. 
-We propose a heuristic based on a two-step prediction approach: (i) predicting individual job runtimes using a regression model trained on historical executions and (ii) simulating workflow execution to estimate makespan and cost for alternative offloading configurations.
+%This paper presents PACE, a middleware that places workflow jobs across federated environments by leveraging runtime predictions combined with performance-driven job selection criteria. 
 
-The method is implemented as an extension of the Snakemake workflow management system and is evaluated with three real-world bioinformatic workflows. 
-By determining the locally optimal subset of jobs to offload, our approach reduces the overall workflow makespan by up to 36.51\% compared to a single-cluster baseline and reduces costs under deadline constraints by approximately 52\% compared to naive offloading, while maintaining absolute makespan prediction errors between 0.21\% and 16.88\%.
+This paper presents SOU, a middleware that offloads jobs across federated compute clusters. By using a runtime driven job-selection heuristic, SOU offloads jobs across the environments until a user-defined maximum duration is met.
+%We propose a heuristic based on a two-step prediction approach: (i) predicting individual job runtimes using a regression model trained on historical executions and (ii) simulating workflow execution to estimate makespan and cost for alternative offloading configurations.%
+%The method is implemented as an extension of the Snakemake workflow management system and is evaluated with three real-world bioinformatic workflows. 
+%In real-world evaluations, the proposed method satisfies time-to-result objectives and decreases the number of federated jobs by 40.2\%, yielding a 52\% cost reduction relative to a naive placement baseline.
+
+In real-world evaluations, our proposed method satisfies time-to-result objectives and decreases the number of offloaded jobs by 40.2\%, yielding a 52\% cost reduction relative to a naive offloading baseline.
