@@ -10,10 +10,9 @@
 
 \begin{figure}[t]
     \centering
-    \includegraphics[
-        width=0.95\columnwidth
-    ]{img/011026_overview_BigData.jpg}
-    \caption{Overview of the multi-cluster scenario - Scientists submit workflows and SOU computes job placement to satisfy time-to-result using offloading.}
+    % \includegraphics[width=0.95\columnwidth]{img/011026_overview_BigData.jpg}
+    \input{img/overview}
+    \caption{Overview of SOU. Before execution, SOU fits a Bayesian linear runtime model per task on historical runs (1), simulates the workflow DAG on both clusters using the predicted job runtimes $\hat t_q(j)$ to estimate the makespan $\hat M$ (2), and selects jobs $J_\text{off}$ for offloading via LJF or SISF until $\hat M$ meets the user-defined time-to-result $D$ (3). Snakemake then runs $J_\text{off}$ on the secondary cluster and all other jobs on the primary cluster.}
     \label{fig:intro}
 \end{figure}
 

@@ -1,0 +1,100 @@
+% Overview of SOU. Drawn at final size for a single IEEE column (do not scale).
+% Requires: \usepackage{tikz} and \usetikzlibrary{arrows.meta,shapes.geometric}
+% Job colours are consistent across the figure: white = primary, orange = offloaded.
+% The example DAG (a -> {b,c,d} -> e) offloads c and d in panels 2, 3 and the clusters.
+\begin{tikzpicture}[
+    font=\scriptsize,
+    >={Stealth[length=3.5pt,width=3pt]},
+    frame/.style={draw=black!70, line width=0.5pt, rounded corners=2pt},
+    stage/.style={frame, fill=white, minimum width=2.4cm, minimum height=2.05cm},
+    title/.style={font=\scriptsize\bfseries},
+    num/.style={circle, fill=black!75, text=white, font=\tiny\bfseries, inner sep=0.5pt, minimum size=7pt},
+    io/.style={frame, fill=black!4, align=center, inner sep=2.5pt},
+    flow/.style={->, line width=0.5pt},
+    job/.style={draw=black!70, line width=0.35pt, fill=white, minimum size=5pt, inner sep=0pt},
+    off/.style={fill=offload},
+    dep/.style={-{Stealth[length=2pt,width=2pt]}, line width=0.35pt},
+  ]
+  \definecolor{offload}{HTML}{E69F00}   % offloaded jobs (colour-blind safe)
+  \definecolor{band}{HTML}{56B4E9}      % predictive uncertainty
+
+  % ------------------------------------------------------------ SOU
+  \draw[frame, fill=black!4] (0,2.05) rectangle (8.6,4.5);
+  \node[title, anchor=west] at (4.45,4.355) {SOU \textnormal{(before execution)}};
+
+  \node[stage] (s1) at (1.3,3.175) {};
+  \node[stage] (s2) at (4.3,3.175) {};
+  \node[stage] (s3) at (7.3,3.175) {};
+  \foreach \s/\i/\t in {s1/1/Runtime model, s2/2/Simulation, s3/3/Job selection} {
+    \node[title, below=2pt] at (\s.north) {\t};
+    \node[num] at ([shift={(2pt,-2pt)}]\s.north west) {\i};
+  }
+  \node[align=center, above=1pt] at (s1.south) {per-task Bayesian\\linear regression};
+  \node[align=center, above=1pt] at (s2.south) {schedule the DAG\\on both clusters};
+  \node[align=center, above=1pt] at (s3.south) {LJF\,/\,SISF until\\$\hat M \le D$};
+
+  % glyph 1: observations, posterior mean and predictive band
+  \begin{scope}[shift={(1.3,3.3)}]
+    \fill[band!35] (-0.6,-0.27) -- (0.62,0.11) -- (0.62,0.35) -- (-0.6,-0.13) -- cycle;
+    \draw[band!70!black, line width=0.6pt] (-0.6,-0.2) -- (0.62,0.23);
+    \foreach \p in {(-0.45,-0.19),(-0.3,-0.07),(-0.12,-0.1),(0.05,0.05),(0.2,0.02),(0.35,0.17),(0.5,0.16)}
+      \fill[black!80] \p circle (0.7pt);
+    \draw[->, line width=0.35pt] (-0.7,-0.35) -- (0.75,-0.35) node[right=-1.5pt] {$x$};
+    \draw[->, line width=0.35pt] (-0.7,-0.35) -- (-0.7,0.38) node[left=-1.5pt] {$t$};
+  \end{scope}
+
+  % glyph 2: simulated schedule (upper lane primary, lower lane secondary)
+  \begin{scope}[shift={(4.3,3.3)}]
+    \foreach \a/\b in {-0.72/-0.4, -0.36/0.1, 0.14/0.5}
+      \draw[job] (\a,0.14) rectangle (\b,0.32);
+    \foreach \a/\b in {-0.36/-0.1, -0.06/0.1}
+      \draw[job, off] (\a,-0.12) rectangle (\b,0.06);
+    \draw[->, line width=0.35pt] (-0.75,-0.3) -- (0.8,-0.3) node[right=-1.5pt] {$\tau$};
+    \draw[densely dashed, line width=0.4pt] (0.5,-0.3) -- (0.5,0.4) node[right=-1.5pt, pos=0.85] {$\hat M$};
+  \end{scope}
+
+  % glyph 3: job DAG with the jobs selected for offloading
+  \begin{scope}[shift={(7.3,3.3)}]
+    \node[job, circle] (a) at (0,0.33) {};
+    \node[job, circle] (b) at (-0.42,0.02) {};
+    \node[job, circle, off] (c) at (0,0.02) {};
+    \node[job, circle, off] (d) at (0.42,0.02) {};
+    \node[job, circle] (e) at (0,-0.29) {};
+    \foreach \u/\v in {a/b,a/c,a/d,b/e,c/e,d/e} \draw[dep] (\u) -- (\v);
+  \end{scope}
+
+  % pipeline arrows
+  \draw[flow] ([yshift=4pt]s1.east) -- node[above=0pt] {$\hat t_q(j)$} ([yshift=4pt]s2.west);
+  \draw[flow] ([yshift=4pt]s3.west) -- node[above=0pt] {$J_\text{off}$} ([yshift=4pt]s2.east);
+  \draw[flow] ([yshift=-6pt]s2.east) -- node[below=0pt] {$\hat M$} ([yshift=-6pt]s3.west);
+
+  % ------------------------------------------------------------ inputs
+  \node[io, shape=cylinder, shape border rotate=90, aspect=0.12, minimum width=1.9cm, minimum height=0.8cm]
+    (hist) at (1.3,5.25) {historical runs\\[-1pt](logs, benchmarks)};
+  \node[io] (wf) at (4.3,5.25) {workflow\\[-1pt](Snakefile)};
+  \begin{scope}[shift={(8.0,5.2)}]   % scientist
+    \draw[line width=0.5pt] (0,0.2) circle (0.1);
+    \draw[line width=0.5pt] (-0.18,-0.12) to[out=90,in=180] (0,0.06) to[out=0,in=90] (0.18,-0.12);
+    \node[above=-1pt] at (0,0.3) {scientist};
+  \end{scope}
+
+  \draw[flow] (7.75,0 |- wf.east) -- node[above=-1pt] {submits} (wf.east);
+  \draw[flow] (hist.south) -- node[right=-1pt, pos=0.25] {fit} (hist.south |- s1.north);
+  \draw[flow] (wf.south) -- node[left=-1pt, pos=0.25] {dry run: DAG, $x_j$} (s2.north);
+  \draw[flow] (8.0,5.0) -- node[left=-1pt, pos=0.18] {target $D$} (8.0,0 |- s3.north);
+
+  % ------------------------------------------------------------ execution
+  \node[frame, fill=black!4, minimum width=8.6cm, minimum height=0.42cm, anchor=south west] (smk) at (0,1.2)
+    {\textbf{Snakemake} with offloading executor plugin};
+  \draw[flow] (s3.south) -- node[left=-1pt] {$J_\text{off}$ (job IDs)} (s3.south |- smk.north);
+
+  \node[frame, minimum width=4.1cm, minimum height=0.8cm, anchor=south west] (prim) at (0,0) {};
+  \node[frame, minimum width=4.1cm, minimum height=0.8cm, anchor=south east] (sec) at (8.6,0) {};
+  \node[align=left, anchor=west] at ([xshift=2pt]prim.west) {\textbf{Primary cluster}\\on-premises};
+  \node[align=left, anchor=west] at ([xshift=2pt]sec.west) {\textbf{Secondary cluster}\\shared HPC\,/\,cloud};
+  \foreach \i in {0,1,2} \node[job] at ([xshift=-7pt-\i*8pt]prim.east) {};
+  \foreach \i in {0,1}   \node[job, off] at ([xshift=-7pt-\i*8pt]sec.east) {};
+
+  \draw[flow] (prim.north |- smk.south) -- node[right=-1pt] {other jobs} (prim.north);
+  \draw[flow] (sec.north |- smk.south) -- node[right=-1pt] {offloaded jobs} (sec.north);
+\end{tikzpicture}
