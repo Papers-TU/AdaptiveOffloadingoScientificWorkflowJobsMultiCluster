@@ -11,11 +11,14 @@
 
 \subsection{Experimental Setup}
 \label{subsec:experimental-setup}
-Our results demonstrate the applicability of the proposed method using two real-world bioinformatics workflows, \textit{rnaseq-star-deseq2}\footnote{\url{https://github.com/snakemake-workflows/rna-seq-star-deseq2}} and \textit{stained glass}\footnote{\url{https://github.com/mrvollger/StainedGlass}}, selected from the ten most widely used Snakemake workflows. Experiments were conducted on a multi-cluster platform comprising two Kubernetes clusters.
+Experiments were conducted on a multi-cluster platform comprising two Kubernetes clusters. Each cluster was equipped with two Ubuntu 24.04 nodes featuring AMD EPYC 7282 processors (16 cores, 32 threads, 2.8 GHz), 125 GiB RAM, and 3.5 TB SSD storage. Inter-cluster network bandwidth was limited to 5 Gbit/s to emulate geo-distributed latency effects.
 
 \subsection{Experimental Results}
 \label{subsec:experimental-results}
+Our results demonstrate the applicability of the proposed method using two real-world bioinformatics workflows, \textit{rnaseq-star-deseq2}\footnote{\url{https://github.com/snakemake-workflows/rna-seq-star-deseq2}} and \textit{stained glass}\footnote{\url{https://github.com/mrvollger/StainedGlass}}, selected from the ten most widely used Snakemake workflows. 
+
 On average, our prediction model outperforms an uncertainty-unaware baseline (linear regression) by 28.1\%, achieving a MAPE of 3.61\% and satisfies two distinct makespan targets for each workflow. Compared to naively offloading jobs whenever on-premises resources are exhausted, selecting jobs according to LJF and SISF decreases computational cost by 48.1\% while keeping the associated increase in makespan moderate at 14.9\%.
+
 %Our results demonstrate the applicability of the proposed method using two real-world bioinformatics workflows, rnaseq-star-deseq2 and stained glass, selected from the ten most widely used Snakemake workflows. Experiments were conducted on a multi-cluster platform comprising two Kubernetes clusters. Each cluster was equipped with two Ubuntu 24.04 nodes featuring AMD EPYC 7282 processors (16 cores, 32 threads, 2.8 GHz), 125 GiB RAM, and 3.5 TB SSD storage. Inter-cluster network bandwidth was limited to 5 Gbit/s to emulate geo-distributed latency effects. On average, the proposed approach outperforms the OLS model by 28.1\%, achieving a MAPE of 3.61\%. It satisfies two distinct makespan targets for each workflow and reduces computational cost by 48.1\% relative to the bursting baseline, while constraining the makespan increase associated with LJF and SISF to 14.9\%.
 \newpage
 
