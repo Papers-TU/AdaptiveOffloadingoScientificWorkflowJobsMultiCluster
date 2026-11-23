@@ -15,6 +15,12 @@ Experiments were conducted on a multi-cluster platform comprising two Kubernetes
 
 \subsection{Experimental Results}
 \label{subsec:experimental-results}
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{img/evaluation/workflow_offloading_steps_rna-seq-star-deseq2.pdf}
+    \caption{Dependence of workflow makespan prediction on the number of offloaded jobs for rna-seq-star-deseq2}
+    \label{fig:makespan-offloading-dependence}
+\end{figure}
 Our results demonstrate the applicability of the proposed method using two real-world bioinformatics workflows, \textit{rnaseq-star-deseq2}\footnote{\url{https://github.com/snakemake-workflows/rna-seq-star-deseq2}} and \textit{stained glass}\footnote{\url{https://github.com/mrvollger/StainedGlass}}, selected from the ten most widely used Snakemake workflows. 
 
 On average, our prediction model outperforms an uncertainty-unaware baseline (linear regression) by 28.1\%, achieving a MAPE of 3.61\% and satisfies two distinct makespan targets for each workflow. Compared to naively offloading jobs whenever on-premises resources are exhausted, selecting jobs according to LJF and SISF decreases computational cost by 48.1\% while keeping the associated increase in makespan moderate at 14.9\%.
