@@ -8,14 +8,7 @@
 
 %aded to the secondary environment (the rest run in the primary). Let $M(J_{\text{off}})$ be the resulting makespan, $D$ the deadline, and $C(J_{\text{off}})$ the offloading cost. We seek $J_{\text{off}}^*\subseteq J$ such that $M(J_{\text{off}}^*)\le D$. As a workflow is composed of a set of jobs $J$, its makespan is influenced by the runtimes $t(j)$ of these jobs $j \in J$, their dependencies, and the extent of job parallelization. Since workflow makespan directly depends on job runtimes, we implement a two-step prediction approach where we first predict the runtimes of all jobs in $J$ and then use these predictions to estimate the workflow makespan of different job placements over the multi-cluster environment. 
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[
-        width=0.95\columnwidth
-    ]{img/011026_overview_BigData.jpg}
-    \caption{Overview of the multi-cluster scenario - Scientists submit workflows and SOU computes job placement to satisfy time-to-result using offloading.}
-    \label{fig:intro}
-\end{figure}
+\input{img/fig_overview}
 
 Our approach operates by using runtime predictions of workflow jobs to simulate its federated makespan prior to execution. We first analyze historical workflow executions and extract all jobs $J^\text{hist}$ with their runtimes $t(j_i^\text{hist})$ and combined primary input sizes $J^\text{hist}(x)$ (sum of all input files from jobs and their predecessors) by reconstructing the job DAG. If the input data size correlates with the task runtime by \(\rho\geq0.8\), we fit a Bayesian linear model \(t\sim\mathcal N(\beta_0+\beta_1x,\sigma^2)\), using Gaussian coefficient priors and Gamma precision priors with \(\beta_0\) and \(\beta_1\) denoting the task-specific intercept and input-size coefficient. Thus,
 \[

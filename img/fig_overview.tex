@@ -1,0 +1,54 @@
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  font=\footnotesize, >={Stealth[length=1.5mm]},
+  io/.style={draw, rounded corners=2pt, minimum width=3.9cm, minimum height=9mm, align=center},
+  stp/.style={draw, rounded corners=1pt, fill=white, minimum width=2.45cm, minimum height=9mm, align=center},
+  dot/.style={circle, fill=#1, inner sep=0pt, minimum size=1.6mm},
+  job/.style={fill=#1, minimum size=1.7mm, inner sep=0pt}
+]
+% ---- inputs
+\node[io, fill=red!10]  (wf)   at (2.0,4.4) {\hspace{9mm}Scientific workflow\\\hspace{9mm}+ time-to-result};
+\node[io, fill=gray!10] (hist) at (6.6,4.4) {\hspace{7mm}Historical\\\hspace{7mm}executions};
+% mini DAG icon
+\begin{scope}[shift={(0.45,4.4)}]
+  \node[dot=teal]   (a) at (0,0.22) {};
+  \node[dot=violet] (b) at (-0.22,0) {}; \node[dot=teal] (c) at (0.22,0) {};
+  \node[dot=orange] (d) at (0,-0.22) {};
+  \draw (a)--(b) (a)--(c) (b)--(d) (c)--(d);
+\end{scope}
+% database icon
+\begin{scope}[shift={(5.15,4.4)}]
+  \draw[fill=white] (-0.2,0.2) -- (-0.2,-0.2) arc[start angle=180, end angle=360, x radius=0.2, y radius=0.07] -- (0.2,0.2);
+  \draw[fill=white] (0,0.2) ellipse[x radius=0.2, y radius=0.07];
+  \draw (-0.2,0) arc[start angle=180, end angle=360, x radius=0.2, y radius=0.07];
+\end{scope}
+
+% ---- SOU
+\node[draw, rounded corners=2pt, fill=gray!4, minimum width=8.6cm, minimum height=21mm] (sou) at (4.3,2.45) {};
+\node[anchor=north, font=\footnotesize\bfseries, inner sep=2pt] at (sou.north) {SOU};
+\node[stp, fill=blue!8]                (pred) at (1.4,2.6)  {Runtime\\prediction};
+\node[stp, fill=blue!8, very thick]    (sim)  at (4.3,2.6)  {Makespan\\simulation};
+\node[stp, fill=orange!15, dashed]     (crit) at (7.2,2.6)  {Offloading criterion\\(pluggable)};
+\draw[->] (pred) -- (sim);
+\draw[->] (crit) -- (sim);
+\draw[->] (sim.south) ++(0.35,0) arc[start angle=0, end angle=-180, x radius=0.35, y radius=0.2];
+\node[font=\scriptsize\itshape, anchor=north, inner sep=1pt] at (4.3,1.93) {until time-to-result is met};
+
+% ---- clusters
+\node[io, fill=green!8] (c1) at (2.0,0.55) {\hspace{9mm}On-premises\\\hspace{9mm}cluster};
+\node[io, fill=green!8] (c2) at (6.6,0.55) {\hspace{9mm}Shared HPC\\\hspace{9mm}or cloud};
+\foreach \x/\y/\c in {0/0/teal,1/0/violet,2/0/teal,0/1/orange,1/1/teal,2/1/violet}
+  \node[job=\c] at ($(0.3,0.45)+(\x*0.23,\y*0.23)$) {};
+\foreach \x/\y/\c in {0/0/violet,1/0/teal,0/1/teal}
+  \node[job=\c] at ($(4.9,0.45)+(\x*0.23,\y*0.23)$) {};
+
+% ---- flow
+\draw[->] (wf)   -- (wf |- sou.north);
+\draw[->] (hist) -- (hist |- sou.north);
+\draw[->] (c1 |- sou.south) -- node[font=\scriptsize\itshape, right] {local jobs} (c1);
+\draw[->] (c2 |- sou.south) -- node[font=\scriptsize\itshape, right] {offloaded jobs} (c2);
+\end{tikzpicture}
+\caption{SOU overview: predicted job runtimes drive a makespan simulation in which a pluggable offloading criterion selects jobs for the secondary cluster until the user-defined time-to-result is met.}
+\label{fig:intro}
+\end{figure}
