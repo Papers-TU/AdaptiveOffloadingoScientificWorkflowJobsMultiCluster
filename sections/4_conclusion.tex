@@ -1,1 +1,4 @@
-% TODO: write conclusion (full-paper version: git show 281ed62:sections/7_conclusion.tex)
+In this paper, we presented SOU, a Snakemake extension that offloads scientific workflow jobs across multi-cluster environments to meet user-defined deadlines.
+SOU predicts job runtimes from historical executions and simulates DAG execution to estimate makespan and cost of alternative offloading configurations.
+Our evaluation on real bioinformatics workflows shows that SOU meets makespan targets while reducing cost by 48.1\% compared to naive offloading.
+Future work will incorporate online learning to re-evaluate offloading decisions at runtime~\cite{da_silva_online_2015, hilman_task_2018}, extend predictions to heterogeneous environments~\cite{bader_lotaru_2022, bader_lotaru_2024}, and consider network latency as well as energy and CO\textsubscript{2} metrics in the offloading criterion.
