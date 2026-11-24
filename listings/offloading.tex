@@ -1,28 +1,30 @@
 \begin{algorithm}[t]
-\caption{Simulation-based job offloading}
+\caption{Job Offloading via Makespan Prediction}
 \label{alg:offloading}
 \small
 \SetKwFunction{Sim}{Simulate}
 \SetKwProg{Fn}{Function}{:}{}
-\KwIn{jobs $J$ (DAG), target makespan $D$, strategy $\mathcal{S}$: LJF (max $\hat t_q(j)$) or SISF (min $x$)}
+\KwIn{jobs $J$, target makespan $D$, free resources $R_\mathrm{p}$, $R_\mathrm{s}$ of primary (p) and secondary (s), criterion $\mathcal{C}$: runtime-centric (LJF), data-centric (SISF), or naive (PEFO)}
 \KwOut{offloaded jobs $J_\mathrm{off}$}
-$J_\mathrm{off}\gets\emptyset$;\ $(\hat M, J_\mathrm{def})\gets\Sim{$J_\mathrm{off}$}$\;
-\While{$\hat M > D$ \textbf{and} $J_\mathrm{def}\setminus J_\mathrm{off}\neq\emptyset$}{
-  $j^*\gets$ top-ranked job in $J_\mathrm{def}\setminus J_\mathrm{off}$ under $\mathcal{S}$\;
-  $J_\mathrm{off}\gets J_\mathrm{off}\cup\{j^*\}$;\ $(\hat M, J_\mathrm{def})\gets\Sim{$J_\mathrm{off}$}$\;
+$J_\mathrm{off}\gets\emptyset$\;
+$\hat M\gets\Sim{$J_\mathrm{off}$}$\;
+\While{$\hat M > D$ \textbf{and} $J_\mathrm{off}\neq J$}{
+  add the first job of $J\setminus J_\mathrm{off}$ selected by $\mathcal{C}$ to $J_\mathrm{off}$\;
+  $\hat M\gets\Sim{$J_\mathrm{off}$}$\;
 }
 \Return $J_\mathrm{off}$\;
 \BlankLine
 \Fn{\Sim{$J_\mathrm{off}$}}{
-  place $J_\mathrm{off}$ on secondary, $J\setminus J_\mathrm{off}$ on primary\;
-  $\tau\gets 0$;\ $J_\mathrm{def}\gets\emptyset$\;
+  $\hat M\gets 0$\;
   \While{unfinished jobs in $J$}{
     \ForEach{ready job $j$}{
-      \lIf{cluster of $j$ has capacity}{run $j$ for $\hat t_q(j)$}
-      \lElse{defer $j$;\ $J_\mathrm{def}\gets J_\mathrm{def}\cup\{j\}$}
+      $c\gets\mathrm{s}$ \textbf{if} $j\in J_\mathrm{off}$ \textbf{else} $\mathrm{p}$\;
+      \lIf{$\mathbf r(j)\le R_c$}{run $j$ on $c$ for $\hat t_q(j)$}
+      \lElseIf{\textnormal{PEFO} \textbf{and} $\mathbf r(j)\le R_\mathrm{s}$}{run $j$ on s}
+      \lElse{defer $j$}
     }
-    $\tau\gets$ next job completion; release its resources\;
+    advance $\hat M$ to the next job completion\;
   }
-  \Return $(\tau, J_\mathrm{def})$\;
+  \Return $\hat M$\;
 }
 \end{algorithm}
