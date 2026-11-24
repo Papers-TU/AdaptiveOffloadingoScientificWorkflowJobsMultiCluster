@@ -36,11 +36,10 @@ We then combine the uncertainty-aware runtime models with the per-job resource r
 \input{listings/offloading}
 
 For a selected set $J_\mathrm{off}$, SOU estimates the offloading cost based on on-demand cloud pricing as
-\begin{multline*}
-\hat C(J_\mathrm{off})=\sum_{j\in J_\mathrm{off}}\Big[\hat t'(j)\big(\alpha_\mathrm{cpu}\,\mathrm{cpu}(j)+\alpha_\mathrm{mem}\,\mathrm{mem}(j)\\
-+\alpha_\mathrm{stor}\,\mathrm{stor}(j)\big)+\alpha_\mathrm{net}\,\mathrm{out}(j)\Big],
-\end{multline*}
-where $\hat t'(j)$ is the simulated runtime of $j$ on the secondary cluster, $\mathrm{cpu}(j)$, $\mathrm{mem}(j)$, and $\mathrm{stor}(j)$ are the requested vCPUs, memory, and ephemeral storage, $\mathrm{out}(j)$ is the median historical output size of the job's task transferred back, and $\alpha$ denotes the respective unit prices.
+\[
+\hat C(J_\mathrm{off})=\sum_{j\in J_\mathrm{off}}\big(\hat t'(j)\,\boldsymbol{\alpha}^\top\mathbf r(j)+\alpha_\mathrm{net}\,\mathrm{out}(j)\big),
+\]
+where $\hat t'(j)$ is the simulated runtime of $j$ on the secondary cluster, $\mathbf r(j)$ holds the requested vCPUs, memory, and ephemeral storage, $\boldsymbol{\alpha}$ their unit prices, and $\mathrm{out}(j)$ the median historical output size of the job's task, transferred back at price $\alpha_\mathrm{net}$.
 %By being aware of the available resources, pluggable job-selection criterons determine which jobs are selected for placement in another environment. The simulation terminates, when the job offloading reached a user-desired makespan and outputs the potential costs according to a user-defined cost model. 
 
 
