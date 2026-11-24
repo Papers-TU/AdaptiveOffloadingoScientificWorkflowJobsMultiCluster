@@ -28,10 +28,10 @@
 
 % strategy strip
 \node[draw, rounded corners=2pt, fill=gray!5, minimum width=8.6cm, minimum height=5.5mm] (strat) at (4.3,2.85) {};
-\node[anchor=west, font=\scriptsize] at (strat.west) {\textbf{Pluggable strategy:}};
+\node[anchor=west, font=\scriptsize] at (strat.west) {\textbf{Pluggable Criterion:}};
 \node[draw=orange!80!black, fill=orange!20, rounded corners=1pt, font=\scriptsize, inner sep=1.5pt] (ljf) at (3.25,2.85) {LJF};
 \node[font=\scriptsize, text=gray, anchor=west] at ($(ljf.east)+(0.05,0)$) {SISF $\mid$ PEFO};
-\node[font=\scriptsize, anchor=east] at ($(strat.east)+(-0.1,0)$) {offload order: 30 $\succ$ 20 $\succ$ 12};
+\node[font=\scriptsize, anchor=east] at ($(strat.east)+(-0.1,0)$) {offloading order: 30 $\succ$ 20 $\succ$ 12};
 
 \snapdag{1.25}{job}{job}{job}
 \snapdag{4.3}{new}{job}{job}

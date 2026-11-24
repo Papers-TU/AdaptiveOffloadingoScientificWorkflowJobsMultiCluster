@@ -21,6 +21,7 @@
 \end{figure}
 \end{comment}
 
+\subsection{Workflow Makespan Prediction}
 Our approach operates by using runtime predictions of workflow jobs to simulate its federated makespan prior to execution. We first analyze historical workflow executions and extract all jobs $J^\text{hist}$ with their runtimes $t(j_i^\text{hist})$ and combined primary input sizes $J^\text{hist}(x)$ (sum of all input files from jobs and their predecessors) by reconstructing the job DAG. If the input data size correlates with the task runtime by \(\rho\geq0.8\), we fit a Bayesian linear model \(t\sim\mathcal N(\beta_0+\beta_1x,\sigma^2)\), using Gaussian coefficient priors and Gamma precision priors with \(\beta_0\) and \(\beta_1\) denoting the task-specific intercept and input-size coefficient. Thus,
 \[
 \hat t_q(j)=
@@ -30,16 +31,14 @@ Our approach operates by using runtime predictions of workflow jobs to simulate 
 \end{cases}
 \]
 where \(\mathcal N(\mu_j,\sigma_j^2)\) is the posterior predictive distribution and \(q=0.5\) yields the Bayesian point estimate.
+
+\subsection{Heuristic Job Offloading Simulation}
+\input{listings/offloading}
+
 We then combine the uncertainty-aware runtime models with the per-job resource requirements and estimate workflow makespan using discrete-event simulation over the DAG. The simulator advances jobs according to predicted runtimes and resource availability. It assesses offloading candidates using either the longest predicted runtime (LJF) or the minimum input data size (SISF), and subsequently selects the configuration that achieves a user-specified makespan target while minimizing the number of offloaded tasks. Fig.~\ref{fig:approach} illustrates this job selection procedure, and Algorithm~\ref{alg:offloading} formalizes it.
 
 \input{img/fig_approach}
-\input{listings/offloading}
 
-For a selected set $J_\mathrm{off}$, SOU estimates the offloading cost based on on-demand cloud pricing as
-\[
-\hat C(J_\mathrm{off})=\sum_{j\in J_\mathrm{off}}\big(\hat t'(j)\,\boldsymbol{\alpha}^\top\mathbf r(j)+\alpha_\mathrm{net}\,\mathrm{out}(j)\big),
-\]
-where $\hat t'(j)$ is the simulated runtime of $j$ on the secondary cluster, $\mathbf r(j)$ holds the requested vCPUs, memory, and ephemeral storage, $\boldsymbol{\alpha}$ their unit prices, and $\mathrm{out}(j)$ the median historical output size of the job's task, transferred back at price $\alpha_\mathrm{net}$.
 %By being aware of the available resources, pluggable job-selection criterons determine which jobs are selected for placement in another environment. The simulation terminates, when the job offloading reached a user-desired makespan and outputs the potential costs according to a user-defined cost model. 
 
 
