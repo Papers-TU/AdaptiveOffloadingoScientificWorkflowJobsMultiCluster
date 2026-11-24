@@ -1,0 +1,53 @@
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  font=\footnotesize, >={Stealth[length=1.3mm]},
+  job/.style={circle, draw=gray!70!black, fill=white, minimum size=5.2mm, inner sep=0pt, font=\tiny},
+  off/.style={job, fill=orange!35, draw=orange!80!black},
+  new/.style={off, very thick},
+  edge/.style={->, gray!70, >={Stealth[length=0.9mm]}},
+  nxt/.style={->, thick, gray!60!black}
+]
+% one snapshot: #1 x-centre, #2-#4 styles of the three middle jobs
+\newcommand{\snapdag}[4]{%
+  \begin{scope}[shift={(#1,1.45)}]
+    \node[job] (s) at (0,0.75) {5};
+    \node[#2]  (a) at (-0.62,0) {30};
+    \node[#3]  (b) at (0,0) {12};
+    \node[#4]  (c) at (0.62,0) {20};
+    \node[job] (t) at (0,-0.75) {8};
+    \foreach \m in {a,b,c} {\draw[edge] (s) -- (\m); \draw[edge] (\m) -- (t);}
+  \end{scope}}
+% makespan bar: #1 x-centre, #2 length, #3 colour, #4 label
+\newcommand{\mkbar}[4]{%
+  \begin{scope}[shift={({#1-1.1},0.2)}]
+    \fill[#3] (0,-0.07) rectangle (#2,0.07);
+    \draw[red!70!black, dashed, thick] (1.6,-0.17) -- (1.6,0.2);
+    \node[font=\tiny, anchor=north west, inner sep=1pt] at (0,-0.08) {#4};
+  \end{scope}}
+
+% strategy strip
+\node[draw, rounded corners=2pt, fill=gray!5, minimum width=8.6cm, minimum height=5.5mm] (strat) at (4.3,2.85) {};
+\node[anchor=west, font=\scriptsize] at (strat.west) {\textbf{Pluggable strategy:}};
+\node[draw=orange!80!black, fill=orange!20, rounded corners=1pt, font=\scriptsize, inner sep=1.5pt] (ljf) at (3.25,2.85) {LJF};
+\node[font=\scriptsize, text=gray, anchor=west] at ($(ljf.east)+(0.05,0)$) {SISF $\mid$ PEFO};
+\node[font=\scriptsize, anchor=east] at ($(strat.east)+(-0.1,0)$) {offload order: 30 $\succ$ 20 $\succ$ 12};
+
+\snapdag{1.25}{job}{job}{job}
+\snapdag{4.3}{new}{job}{job}
+\snapdag{7.35}{off}{job}{new}
+
+\mkbar{1.25}{2.2}{red!45}{makespan 70 $>$ 50}
+\mkbar{4.3}{1.75}{red!45}{makespan 55 $>$ 50}
+\mkbar{7.35}{1.45}{teal!55}{makespan 45 $\le$ 50}
+
+\foreach \x/\t in {1.25/start, 4.3/iteration 1, 7.35/iteration 2} \node[font=\tiny\itshape, text=gray!80!black] at (\x-0.95,2.3) {\t};
+\draw[nxt] (2.2,1.45) -- node[font=\tiny, above] {offload} (3.35,1.45);
+\draw[nxt] (5.25,1.45) -- node[font=\tiny, above] {offload} (6.4,1.45);
+
+\node[font=\tiny, red!70!black, anchor=south, inner sep=1pt] at (1.75,0.4) {objective};
+\node[font=\footnotesize, teal!70!black, anchor=west] at (7.92,0.2) {\ding{51}};
+\end{tikzpicture}
+\caption{Job selection: starting from a DAG annotated with predicted runtimes, the pluggable strategy (here LJF) offloads the next-ranked job and re-simulates the makespan until the objective (here time-to-result) is met.}
+\label{fig:approach}
+\end{figure}
