@@ -30,9 +30,10 @@ Our approach operates by using runtime predictions of workflow jobs to simulate 
 \end{cases}
 \]
 where \(\mathcal N(\mu_j,\sigma_j^2)\) is the posterior predictive distribution and \(q=0.5\) yields the Bayesian point estimate.
-We then combine the uncertainty-aware runtime models with the per-job resource requirements and estimate workflow makespan using discrete-event simulation over the DAG. The simulator advances jobs according to predicted runtimes and resource availability. It assesses offloading candidates using either the longest predicted runtime (LJF) or the minimum input data size (SISF), and subsequently selects the configuration that achieves a user-specified makespan target while minimizing the number of offloaded tasks. Fig.~\ref{fig:approach} illustrates this job selection procedure.
+We then combine the uncertainty-aware runtime models with the per-job resource requirements and estimate workflow makespan using discrete-event simulation over the DAG. The simulator advances jobs according to predicted runtimes and resource availability. It assesses offloading candidates using either the longest predicted runtime (LJF) or the minimum input data size (SISF), and subsequently selects the configuration that achieves a user-specified makespan target while minimizing the number of offloaded tasks. Fig.~\ref{fig:approach} illustrates this job selection procedure, and Algorithm~\ref{alg:offloading} formalizes it.
 
 \input{img/fig_approach}
+\input{listings/offloading}
 %By being aware of the available resources, pluggable job-selection criterons determine which jobs are selected for placement in another environment. The simulation terminates, when the job offloading reached a user-desired makespan and outputs the potential costs according to a user-defined cost model. 
 
 

@@ -1,0 +1,28 @@
+\begin{algorithm}[t]
+\caption{Simulation-based job offloading}
+\label{alg:offloading}
+\small
+\SetKwFunction{Sim}{Simulate}
+\SetKwProg{Fn}{Function}{:}{}
+\KwIn{jobs $J$ (DAG), target makespan $D$, strategy $\mathcal{S}$: LJF (max $\hat t_q(j)$) or SISF (min $x$)}
+\KwOut{offloaded jobs $J_\mathrm{off}$}
+$J_\mathrm{off}\gets\emptyset$;\ $(\hat M, J_\mathrm{def})\gets\Sim{$J_\mathrm{off}$}$\;
+\While{$\hat M > D$ \textbf{and} $J_\mathrm{def}\setminus J_\mathrm{off}\neq\emptyset$}{
+  $j^*\gets$ top-ranked job in $J_\mathrm{def}\setminus J_\mathrm{off}$ under $\mathcal{S}$\;
+  $J_\mathrm{off}\gets J_\mathrm{off}\cup\{j^*\}$;\ $(\hat M, J_\mathrm{def})\gets\Sim{$J_\mathrm{off}$}$\;
+}
+\Return $J_\mathrm{off}$\;
+\BlankLine
+\Fn{\Sim{$J_\mathrm{off}$}}{
+  place $J_\mathrm{off}$ on secondary, $J\setminus J_\mathrm{off}$ on primary\;
+  $\tau\gets 0$;\ $J_\mathrm{def}\gets\emptyset$\;
+  \While{unfinished jobs in $J$}{
+    \ForEach{ready job $j$}{
+      \lIf{cluster of $j$ has capacity}{run $j$ for $\hat t_q(j)$}
+      \lElse{defer $j$;\ $J_\mathrm{def}\gets J_\mathrm{def}\cup\{j\}$}
+    }
+    $\tau\gets$ next job completion; release its resources\;
+  }
+  \Return $(\tau, J_\mathrm{def})$\;
+}
+\end{algorithm}
