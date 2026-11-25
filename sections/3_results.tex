@@ -13,9 +13,9 @@ We derive costs from the runtime and the requested vCPUs, memory, and ephemeral 
 \subsection{Experimental Results}
 \label{subsec:experimental-results}
 Offloading substantially shortens execution. Compared to running all jobs on the primary cluster, PEFO reduces the median makespan by 130\,min ($-36.5$\,\%) for rnaseq-star-deseq2 and by 25\,min ($-31.0$\,\%) for stained glass.
-Four of the five configurations in Table~\ref{tab:results} meet their time-to-result target, with an average slack of 14\,min. Only LJF with the 250\,min target of rnaseq-star-deseq2 misses it, by 6\,min, with a prediction error of $-2.5$\,\%. The Bayesian makespan prediction achieves a MAPE of 3.6\,\%. The largest error occurs for SISF on rnaseq-star-deseq2 ($+10.6$\,\%), where the overestimated makespan still leaves a slack of 35\,min. For stained glass, predictions deviate by at most 1.2\,\% and both targets are met.
+Five of the six configurations in Table~\ref{tab:results} meet their time-to-result target, with an average slack of 19\,min. Only LJF with the 250\,min target of rnaseq-star-deseq2 misses it, by 6\,min, with a prediction error of $-2.3$\,\%. The Bayesian makespan prediction achieves a MAPE of 6.0\,\%. The largest errors occur for SISF on rnaseq-star-deseq2 ($+11.3$\,\% and $+17.4$\,\%), where the overestimated makespan still leaves a slack of 35 and 37\,min. For stained glass, predictions deviate by at most 1.1\,\% and both targets are met.
 SOU reaches the targets with few offloaded jobs. For the 310\,min target of rnaseq-star-deseq2, LJF offloads five jobs, whereas SISF offloads 35.
-Although LJF and SISF yield longer makespans than PEFO, they reduce offloading costs. For rnaseq-star-deseq2, LJF with the 310\,min target lowers the cost from \$5.15 to \$2.07 ($-60$\,\%) at a median makespan of 294\,min instead of 227\,min. Across all configurations in Table~\ref{tab:results}, LJF and SISF reduce the cost by 50.4\,\% compared to PEFO while increasing the makespan by 20.8\,\%.
+Although LJF and SISF yield longer makespans than PEFO, they reduce offloading costs. For rnaseq-star-deseq2, LJF with the 310\,min target lowers the cost from \$5.15 to \$2.07 ($-60$\,\%) at a median makespan of 294\,min instead of 227\,min. Across all configurations in Table~\ref{tab:results}, LJF and SISF reduce the cost by 40.1\,\% compared to PEFO while increasing the makespan by 14.8\,\%.
 
 \begin{figure}[t]
     \centering
@@ -35,11 +35,12 @@ Although LJF and SISF yield longer makespans than PEFO, they reduce offloading c
 \hline
 \textbf{Workflow} & \textbf{Criterion ($C$)} & $|J_\mathrm{off}|$ & \textbf{PE} & \textbf{Cost} \\
 \hline
-rnaseq-star-deseq2 & LJF (310\,min) \checkmark & 5 & +2.9\,\% & 40\,\% \\
- & LJF (250\,min) $\times$ & 8 & $-$2.5\,\% & 74\,\% \\
- & SISF (310\,min) \checkmark & 35 & +10.6\,\% & 33\,\% \\
-stained glass & LJF (75\,min) \checkmark & 2 & +1.2\,\% & 30\,\% \\
- & LJF (65\,min) \checkmark & 6 & $-$0.7\,\% & 80\,\% \\
+rnaseq-star-deseq2 & LJF (310\,min) \checkmark & 5 & +3.3\,\% & 40\,\% \\
+ & LJF (250\,min) $\times$ & 8 & $-$2.3\,\% & 74\,\% \\
+ & SISF (310\,min) \checkmark & 35 & +11.3\,\% & 33\,\% \\
+ & SISF (250\,min) \checkmark & 54 & +17.4\,\% & 94\,\% \\
+stained glass & LJF (75\,min) \checkmark & 2 & +1.1\,\% & 30\,\% \\
+ & LJF (65\,min) \checkmark & 6 & $-$0.8\,\% & 80\,\% \\
 \hline
 \end{tabular}
 \end{table}
