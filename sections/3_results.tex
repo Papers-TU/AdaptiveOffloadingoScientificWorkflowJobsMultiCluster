@@ -1,46 +1,32 @@
-\begin{comment}
-\begin{figure}[t]
-    \centering
-    \includegraphics[
-        width=0.95\columnwidth
-    ]{img/aggregate_cost_makespan_benefit.png}
-    \caption{Results Test}
-    \label{fig:intro}
-\end{figure}
-\end{comment}
-
 \subsection{Experimental Setup}
 \label{subsec:experimental-setup}
 
-% Computational Loads
+% Experiments
+We evaluate two real-world bioinformatics workflows: \textit{rnaseq-star-deseq2}\footnote{\url{https://github.com/snakemake-workflows/rna-seq-star-deseq2}}, which aligns RNA sequencing reads and computes differential gene expression (135 jobs), and \textit{stained glass}\footnote{\url{https://github.com/mrvollger/StainedGlass}}, which computes sequence-identity heatmaps of genome assemblies (44 jobs). Per workflow, we run PEFO as baseline and LJF and SISF with two time-to-result targets each (310 and 250\,min for rnaseq-star-deseq2, 75 and 65\,min for stained glass).
 
 % Infrastructure 
 Experiments were conducted on a multi-cluster platform comprising two Kubernetes clusters. Each cluster was equipped with two Ubuntu 24.04 nodes featuring AMD EPYC 7282 processors (16 cores, 32 threads, 2.8 GHz), 125 GiB RAM, and 3.5 TB SSD storage. Inter-cluster network bandwidth was limited to 5 Gbit/s to emulate geo-distributed latency effects.
 
-% Experiments
-e first train SOU’s makespan and cost predictors by running each workflow five times without offloading, using different input sizes to sample diverse task runtimes.
-
-For evaluation, we run each workflow five more times on a separate fixed test dataset. As summarized in Table~\ref{tab:offloading-experiments}, we performed six experiments per workflow with varying offloading strategies and, when applicable, a chosen deadline per workflow. For the stained-glass workflow, we run only four experiments because LJF and SISF produce identical offloading configurations given their DAG structure. 
-
-Table~\ref{tab:prediction-results} constitutes the principal reference for the presentation of our results. It reports a comparison between the observed median makespan, the predicted makespan, and the number of offloaded jobs, together with the associated costs incurred in the secondary environment. %As evaluation metrics, we employ the normalized deadline adherence score, the mean prediction error and costs in \$. 
-The predicted error (PE) shown for the makespan and cost is calculated as follows:
-\vspace{0.3em}
-\[
-\text{PE} = \frac{\text{predicted\_value} - \text{median}(\text{observed\_values})}{\text{median}(\text{observed\_values})}
-\]
-
-% Cost Model
-For a selected set $J_\mathrm{off}$, SOU estimates the offloading cost based on on-demand cloud pricing as
-\[
-\hat C(J_\mathrm{off})=\sum_{j\in J_\mathrm{off}}\big(\hat t'(j)\,\boldsymbol{\alpha}^\top\mathbf r(j)+\alpha_\mathrm{net}\,\mathrm{out}(j)\big),
-\]
-where $\hat t'(j)$ is the simulated runtime of $j$ on the secondary cluster, $\mathbf r(j)$ holds the requested vCPUs, memory, and ephemeral storage, $\boldsymbol{\alpha}$ their unit prices, and $\mathrm{out}(j)$ the median historical output size of the job's task, transferred back at price $\alpha_\mathrm{net}$.
+Table~\ref{tab:results} reports the number of offloaded jobs $|J_\mathrm{off}|$, the prediction error (PE) of the predicted makespan relative to the observed median makespan, whether the time-to-result target was met, and the offloading cost relative to PEFO.
+We derive costs from the runtime and the requested vCPUs, memory, and ephemeral storage of each offloaded job, priced at on-demand Google Kubernetes Engine (GKE) Autopilot rates\footnote{\url{https://cloud.google.com/kubernetes-engine/pricing}} as a reference for a commercial secondary environment.
 
 \subsection{Experimental Results}
 \label{subsec:experimental-results}
+Offloading substantially shortens execution. Compared to running all jobs on the primary cluster, PEFO reduces the median makespan by 130\,min ($-36.5$\,\%) for rnaseq-star-deseq2 and by 25\,min ($-31.0$\,\%) for stained glass.
+Four of the five configurations in Table~\ref{tab:results} meet their time-to-result target, with an average slack of 14\,min. Only LJF with the 250\,min target of rnaseq-star-deseq2 misses it, by 6\,min, with a prediction error of $-2.5$\,\%. The Bayesian makespan prediction achieves a MAPE of 3.6\,\%. The largest error occurs for SISF on rnaseq-star-deseq2 ($+10.6$\,\%), where the overestimated makespan still leaves a slack of 35\,min. For stained glass, predictions deviate by at most 1.2\,\% and both targets are met.
+SOU reaches the targets with few offloaded jobs. For the 310\,min target of rnaseq-star-deseq2, LJF offloads five jobs, whereas SISF offloads 35.
+Although LJF and SISF yield longer makespans than PEFO, they reduce offloading costs. For rnaseq-star-deseq2, LJF with the 310\,min target lowers the cost from \$5.15 to \$2.07 ($-60$\,\%) at a median makespan of 294\,min instead of 227\,min. Across all configurations in Table~\ref{tab:results}, LJF and SISF reduce the cost by 50.4\,\% compared to PEFO while increasing the makespan by 20.8\,\%.
 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{img/evaluation/workflow_offloading_steps_rna-seq-star-deseq2.pdf}
+    \caption{Dependence of workflow makespan prediction on the number of offloaded jobs for rna-seq-star-deseq2}
+    \label{fig:makespan-offloading-dependence}
+\end{figure}
+
+% Results Table
 \begin{table}[t]
-\caption{Bayesian makespan prediction error (PE) and offloading cost relative to PEFO (medians of five runs; \checkmark/$\times$: deadline met/missed). For stained glass, SISF selects the same jobs as LJF.}
+\caption{Makespan prediction error (PE) and offloading cost relative to naive Offloading (PEFO), \checkmark/$\times$: deadline met/missed).}
 \label{tab:results}
 \centering
 \footnotesize
@@ -58,35 +44,9 @@ stained glass & LJF (75\,min) \checkmark & 2 & +1.2\,\% & 30\,\% \\
 \end{tabular}
 \end{table}
 
-Our results demonstrate the applicability of the proposed method using two real-world bioinformatics workflows, \textit{rnaseq-star-deseq2}\footnote{\url{https://github.com/snakemake-workflows/rna-seq-star-deseq2}} and \textit{stained glass}\footnote{\url{https://github.com/mrvollger/StainedGlass}}, selected from the ten most widely used Snakemake workflows. 
+% Makespan vs. Offloading
+Fig.~\ref{fig:makespan-offloading-dependence} shows the predicted makespan after each simulation run of the iterative job selection (Algorithm~\ref{alg:offloading}) for rnaseq-star-deseq2, with the PEFO prediction for comparison. The orange points mark the configurations SOU selects for the two time-to-result targets (Table~\ref{tab:results}). LJF meets the 310\,min target after offloading five jobs, whereas the prediction for SISF remains nearly constant for the first 25 jobs and requires 35. Since cost grows with the number of offloaded jobs, makespan and cost are strongly negatively correlated ($\rho=-0.925$ for rnaseq-star-deseq2, $-0.997$ for stained glass).
 
-On average, our prediction model outperforms an uncertainty-unaware baseline (linear regression) by 28.1\%, achieving a MAPE of 3.61\% and satisfies two distinct makespan targets for each workflow. Compared to naively offloading jobs whenever on-premises resources are exhausted, selecting jobs according to LJF and SISF decreases computational cost by 48.1\% while keeping the associated increase in makespan moderate at 14.9\%. Table~\ref{tab:results} summarizes the results per experiment.
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\columnwidth]{img/evaluation/workflow_offloading_steps_rna-seq-star-deseq2.pdf}
-    \caption{Dependence of workflow makespan prediction on the number of offloaded jobs for rna-seq-star-deseq2}
-    \label{fig:makespan-offloading-dependence}
-\end{figure}
-
-Figure~\ref{fig:makespan-offloading-dependence} shows the makespan predictions recorded in each simulation run during the iterative job selection of LJF and SISF (Algorithm~\ref{lst:predict_workflow_makespan}), using the rna-seq-star-deseq2 workflow as an example. The orange points mark the offloading configurations chosen by SOU for the deadlines, corresponding to Table~\ref{tab:prediction-results}. SOU selects the configuration with the fewest offloaded jobs that still meets the deadline. Workflow deadlines were chosen to produce clearly distinct makespan predictions. For comparison, the PEFO makespan prediction is also shown. 
-
-%Our results demonstrate the applicability of the proposed method using two real-world bioinformatics workflows, rnaseq-star-deseq2 and stained glass, selected from the ten most widely used Snakemake workflows. Experiments were conducted on a multi-cluster platform comprising two Kubernetes clusters. Each cluster was equipped with two Ubuntu 24.04 nodes featuring AMD EPYC 7282 processors (16 cores, 32 threads, 2.8 GHz), 125 GiB RAM, and 3.5 TB SSD storage. Inter-cluster network bandwidth was limited to 5 Gbit/s to emulate geo-distributed latency effects. On average, the proposed approach outperforms the OLS model by 28.1\%, achieving a MAPE of 3.61\%. It satisfies two distinct makespan targets for each workflow and reduces computational cost by 48.1\% relative to the bursting baseline, while constraining the makespan increase associated with LJF and SISF to 14.9\%.
-
-\begin{comment}
-We conclude that excessive offloading does not necessarily reduce the predicted makespan and can instead lead to performance degradation that eventually violates the deadlines. This occurs because the simulation ignores resource constraints in the secondary environment, so over-offloading causes contention and delayed execution, potentially increasing the makespan. This effect is not expected to occur in settings where the secondary environment is a public cloud, as these typically offer virtually unlimited resources.
-
-However, in our experimental setup resources are limited, and we see that deadlines are not always met due to prediction errors. As can be observed in Table~\ref{tab:prediction-results}, this is especially the case when the makespan prediction for a given deadline is very close to the deadline itself. In this regard, deadlines can be interpreted as soft constraints. SOU does not guarantee that the selected offloading configuration will meet the deadline, but rather tries to find an offloading configuration that is predicted to meet it. 
-There are several possible explanations for the observed prediction errors.
-
-Firstly, as part of the two-stage prediction approach, workflow makespan prediction is based on job runtime predictions, which are inherently uncertain. The prediction error of job runtimes can negatively affect the workflow simulation, leading to larger errors in makespan prediction. 
-% Reasons for inaccurate runtime predictions
-When multiple jobs of a task have to share the resources of the execution environment with many other jobs, contention occurs. This can lead to increased variability in job runtimes, since competing jobs may affect each other's performance, thus significantly contributing to the prediction errors. Additionally, runtime prediction makes use of combined primary
-input data of jobs. If a job has no primary input data of its own, model training relies completely on the primary input data of its ancestors. In some cases, the input data of the primary ancestor is identical for all historical jobs of a certain task, making it impossible to calculate the Pearson correlation coefficient. In effect, the median of historical runtimes is used as a fallback, eventually making job runtime predictions inaccurate. 
-
-Secondly, if offloading is active, the simulation is sensitive to small deviations in job runtimes. For example, if a job is predicted to run slightly longer than it actually does, it may be selected for offloading during the simulation, even if there are sufficient resources available in the primary environment during the actual workflow run. 
-
-Lastly, the simulation does not account for potential job errors. If a job fails during the actual workflow run, it is retried, provided retrying is enabled in the workflow configuration. (The maximum number of retries was set to 5 for all workflows used in the experiments.) This can lead to an increase in makespan compared to the simulation, which assumes that all jobs are completed successfully on the first attempt. 
-\end{comment}
-
-
+% Discussion
+Overall, PEFO, LJF, and SISF substantially reduce the workflow makespan compared to execution without offloading, and SOU identifies a small subset of jobs for offloading that lowers costs while meeting the time-to-result target in most experiments. Targets are met with varying margins, and the single miss occurs where the predicted makespan lies very close to the target. The time-to-result should therefore be understood as a soft constraint, as SOU selects a configuration that is predicted, but not guaranteed, to meet it. Moreover, offloading additional jobs does not always shorten the predicted makespan further (Fig.~\ref{fig:makespan-offloading-dependence}), which underlines the value of selecting jobs deliberately rather than offloading greedily.
+Remaining prediction errors mainly stem from runtime variability under resource contention, from the median fallback for tasks whose inputs show no correlation with runtime, and from job retries, which the simulation does not yet model.
