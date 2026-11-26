@@ -17,6 +17,7 @@ Our model predicts the makespan of both workflows with a MAPE of 5.9\,\% for LJF
 Overestimation is uncritical for the time-to-result, as both SISF runs still finish 35 and 37\,min early. Underestimation is not, as LJF with the 250\,min target of rnaseq-star-deseq2 misses it by 6\,min at a prediction error of only $-2.5$\,\%. All other experiments meet their target.
 
 % Comparison in detail
+Trading speed for cost, LJF and SISF reduce the offloading cost by 40.6\,\% compared to PEFO at a 14.8\,\% longer makespan.
 For the 310\,min target of rnaseq-star-deseq2, LJF offloads only five jobs and lowers the cost from \$5.58 to \$2.07. 
 % Makespan vs. Offloading
 As Fig.~\ref{fig:makespan-offloading-dependence} shows, offloading the longest jobs first lowers the predicted makespan right away. SISF first offloads jobs with small inputs, so its prediction stays nearly constant for the first 25 jobs and it needs 35 jobs for the same target. Still, SISF is cheaper than LJF, as cost depends on the runtime and resources of the offloaded jobs rather than their number. With the 250\,min target, SISF even outperforms PEFO in both makespan and cost.
@@ -50,7 +51,7 @@ stained glass & LJF/SISF (75\,min) \checkmark & 2 & $-$0.2\,\% & +28.5\,\% & $-$
 \end{table}
 
 % Discussion
-Overall, our results show that simulating the makespan before execution lets SOU offload only as many jobs as a given turnaround time requires. Although most targets are met, the single miss occurs when the predicted makespan lies very close to the target. The time-to-result should therefore be understood as a soft constraint, as SOU selects a configuration that is predicted, but not guaranteed, to meet it, although higher quantiles of the Bayesian model can increase this assurance when the historical data shows sufficient runtime variance. 
+Overall, our results show that simulating the makespan before execution lets SOU offload only as many jobs as a given turnaround time requires. Although most targets are met, the single miss occurs when the predicted makespan lies very close to the target. The time-to-result should therefore be understood as a soft constraint, as SOU selects a configuration that is predicted, but not guaranteed, to meet it. Higher quantiles of the Bayesian model can increase this assurance when the historical data shows sufficient runtime variance. 
 
 Moreover, offloading additional jobs does not always shorten the predicted makespan further (Fig.~\ref{fig:makespan-offloading-dependence}), which shows that the choice of jobs matters more than their count. 
 
