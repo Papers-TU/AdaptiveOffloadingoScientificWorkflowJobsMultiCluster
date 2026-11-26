@@ -37,7 +37,7 @@
 \node[draw=orange!70!black, fill=orange!12, rounded corners=1pt, font=\scriptsize, inner sep=1.5pt, anchor=west] (ljf) at ($(lbl.east)+(0.02,0)$) {Longest Job First (LJF)};
 \node[font=\scriptsize, text=gray, anchor=west] (rest) at ($(ljf.east)+(0.02,0)$) {SISF\enspace PEFO};
 \node[font=\scriptsize, anchor=east, inner sep=3pt] (ord) at (strat.east) {$j_2 \succ j_4$};
-\draw[->, thick, gray!60!black] ($(rest.east)+(0.05,0)$) -- node[font=\tiny, above, inner sep=1pt] {order} ($(ord.west)+(-0.05,0)$);
+\draw[->, thick, gray!60!black] ($(rest.east)+(0.05,0)$) -- node[font=\tiny, above, inner sep=1pt] {offloading order} ($(ord.west)+(-0.05,0)$);
 
 \snapdag{1.35}{}{}{}
 \snapdag{4.3}{off,new}{}{}
@@ -46,11 +46,11 @@
 % 0.0315 cm per minute: 73, 43, 38 min, target 40 min
 \mkbar{1.35}{2.30}{makespan 73 $\scriptscriptstyle>$ target 40}
 \mkbar{4.3}{1.35}{makespan 43 $\scriptscriptstyle>$ target 40}
-\mkbar{7.25}{1.20}{makespan 38 $\scriptscriptstyle\le$ target 40 \textcolor{green!50!black}{\ding{51}}}
+\mkbar{7.25}{1.20}{makespan 38 $\scriptscriptstyle\le$ target 40}
 
 \foreach \x/\t in {1.35/{start (predicted runtimes)}, 4.3/{iteration 1: offload $j_2$}, 7.25/{iteration 2: offload $j_4$}}
   \node[font=\tiny\itshape, text=gray!30!black, anchor=west] at (\x-1.4,2.5) {\t};
 \end{tikzpicture}
-\caption{Job selection with LJF on an example DAG annotated with predicted runtimes. The primary cluster runs one job at a time, while offloaded jobs (green) run in parallel on the secondary cluster. In each iteration, SOU offloads the longest remaining job and re-simulates the makespan until it meets the time-to-result target.}
+\caption{Example: Job selection with LJF on a DAG annotated with predicted runtimes. Simulation on primary cluster runs one job at a time, while offloaded jobs (green) run in parallel on the secondary cluster. In each iteration, SOU offloads the longest remaining job and re-simulates the makespan until it meets the time-to-result target.}
 \label{fig:approach}
 \end{figure}
