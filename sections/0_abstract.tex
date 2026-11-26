@@ -1,6 +1,6 @@
 Scientific workflows require substantial computational resources, while scientists expect their results to be available in short turnaround times. As such workloads can exceed the capacity of a single compute cluster, offloading jobs across multiple clusters can alleviate resource constraints and shorten execution time while controlling cost. 
 
-We propose an offloading heuristic based on a two-step prediction approach. First, a regression model trained on historical executions predicts individual job runtimes. Second, a workflow simulation estimates the makespan of alternative offloading configurations, selecting jobs by predicted runtime or input data size until a user-defined time-to-result is met.
+We propose an offloading heuristic based on a two-step prediction approach. First, a regression model trained on historical executions predicts individual job runtimes. Second, a workflow simulation iteratively offloads jobs, selected by predicted runtime or input data size, until the predicted makespan meets a user-defined time-to-result.
 
 We implement our method as SOU, an extension of the Snakemake workflow management system, and evaluate it with two real-world bioinformatics workflows.
 
