@@ -1,7 +1,7 @@
 \input{img/fig_overview}
 
 \paragraph{Workflow Makespan Prediction}
-SOU operates by first predicting job runtimes from historical executions~\cite{bader_lotaru_2024, bader_sizey_2024, balis_evaluation_2023} to simulate the federated makespan prior to execution.
+SOU operates by first predicting job runtimes from historical executions~\cite{bader_lotaru_2024, bader_sizey_2024, balis_evaluation_2023} to simulate the federated makespan prior to submission.
 For each task, we collect the runtimes $\mathcal T$ of its historical jobs and their input size $x$. We define $x$ as the total size of the initial workflow inputs that a job and its ancestors consume, which we obtain by reconstructing the job DAG.
 If $x$ and the runtime show a Pearson correlation of $\rho\geq0.8$, we fit a Bayesian ridge regression $t\sim\mathcal N(\beta_0+\beta_1x,\sigma^2)$ with task-specific intercept $\beta_0$ and coefficient $\beta_1$. Thus,
 \[
@@ -16,7 +16,7 @@ where $\mathcal N(\mu_j,\sigma_j^2)$ is the posterior predictive distribution fo
 \paragraph{Heuristic Job Offloading Simulation}
 % Algorithm
 \input{listings/offloading}
-SOU selects jobs for offloading by simulating the workflow execution with the predicted runtimes (Algorithm~\ref{alg:offloading}). It takes the jobs $J$, the time-to-result target $D$, and a selection criterion $\mathcal{C}$ and returns the set of jobs to offload, $J_\mathrm{off}$, as a greedy approximation of a cost-efficient job set among all $2^{|J|}$ candidates that meets $D$.
+SOU selects jobs for offloading by simulating the workflow execution with the predicted runtimes (Algorithm~\ref{alg:offloading}). It takes the jobs $J$, the time-to-result target $D$, and a selection criterion $\mathcal{C}$ and returns the set of jobs to offload, as a greedy alternative to searching all $2^{|J|}$ candidate sets.
 Starting without offloading, it simulates the workflow once (lines 1--2). As long as the predicted makespan $\hat M$ exceeds $D$, it selects one more job by $\mathcal{C}$, adds it to $J_\mathrm{off}$, and simulates the workflow again with this job on the secondary cluster (lines 3--5).
 \emph{Longest Job First} (LJF) selects the job with the longest predicted runtime $\hat t_q(j)$, as long-running jobs best amortize offloading overheads such as data transfer. \emph{Smallest Input Size First} (SISF) selects the job with the smallest input size $x$ and targets settings where offloading cost grows with data volume. Further criteria can be plugged in.
 Candidates are the jobs that had to wait for resources on the primary cluster in the previous simulation, $J_\mathrm{def}\setminus J_\mathrm{off}$. If no candidate remains before $D$ is met, SOU returns the configuration with the lowest predicted makespan (line 6).
