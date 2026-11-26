@@ -12,8 +12,8 @@ We use two Kubernetes clusters, each with two nodes (AMD EPYC 7282, 32 threads, 
 
 \subsection{Experimental Results}
 \label{subsec:experimental-results}
-Makespan prediction with the Bayesian median ($q=0.5$) achieves a MAPE of 6.0\,\% for LJF and SISF, on he linear regression (5.9\,\%) that selected the jobs of the evaluated runs. LJF deviates by at most 3.3\,\%, whereas SISF overestimates the makespan of rnaseq-star-deseq2 by 11.3\,\% and 17.4\,\%.
-Overestimation is uncritical for the time-to-result, as both SISF runs still finish 35 and 37\,min early. Underestimation is not, as LJF with the 250\,min target of rnaseq-star-deseq2 misses it by 6\,min at a prediction error of only $-2.3$\,\%. All other experiments meet their target.
+As the predictive distributions of the Bayesian model were narrow in our experiments, we report linear regression, which predicts the makespan with a MAPE of 5.9\,\% for LJF and SISF. LJF deviates by at most 2.8\,\%, whereas SISF overestimates the makespan of rnaseq-star-deseq2 by 10.7\,\% and 16.9\,\%.
+Overestimation is uncritical for the time-to-result, as both SISF runs still finish 35 and 37\,min early. Underestimation is not, as LJF with the 250\,min target of rnaseq-star-deseq2 misses it by 6\,min at a prediction error of only $-2.5$\,\%. All other experiments meet their target.
 Offloading once the primary cluster runs out of resources (PEFO) shortens the makespan by 36.5\,\% for rnaseq-star-deseq2 and 31.0\,\% for stained glass, but also incurs the highest offloading cost. LJF and SISF trade part of this speed-up for cost and reduce the offloading cost by 40.6\,\% compared to PEFO at a 14.8\,\% longer makespan. For the 310\,min target of rnaseq-star-deseq2, LJF offloads only five jobs and lowers the cost from \$5.58 to \$2.07. Cost depends on the runtime and resources of the offloaded jobs rather than their number, as SISF with 35 jobs is cheaper than LJF with five for the 310\,min target. With the 250\,min target, SISF even outperforms PEFO in both makespan and cost.
 
 \begin{figure}[t]
@@ -34,12 +34,12 @@ Offloading once the primary cluster runs out of resources (PEFO) shortens the ma
 \hline
 \textbf{Workflow} & \textbf{Criterion ($C$)} & $|J_\mathrm{off}|$ & \textbf{PE} & $\Delta$\textbf{M} & $\Delta$\textbf{C} \\
 \hline
-rnaseq-star- & LJF (310\,min) \checkmark & 5 & +3.3\,\% & +29.8\,\% & $-$62.8\,\% \\
-deseq2 & LJF (250\,min) $\times$ & 8 & $-$2.3\,\% & +12.7\,\% & $-$30.0\,\% \\
- & SISF (310\,min) \checkmark & 35 & +11.3\,\% & +21.2\,\% & $-$65.0\,\% \\
- & SISF (250\,min) \checkmark & 54 & +17.4\,\% & $-$6.3\,\% & $-$3.1\,\% \\
-stained glass & LJF/SISF (75\,min) \checkmark & 2 & +1.1\,\% & +28.5\,\% & $-$70.4\,\% \\
- & LJF/SISF (65\,min) \checkmark & 6 & $-$0.8\,\% & +8.7\,\% & $-$20.4\,\% \\
+rnaseq-star- & LJF (310\,min) \checkmark & 5 & +2.8\,\% & +29.8\,\% & $-$62.8\,\% \\
+deseq2 & LJF (250\,min) $\times$ & 8 & $-$2.5\,\% & +12.7\,\% & $-$30.0\,\% \\
+ & SISF (310\,min) \checkmark & 35 & +10.7\,\% & +21.2\,\% & $-$65.0\,\% \\
+ & SISF (250\,min) \checkmark & 54 & +16.9\,\% & $-$6.3\,\% & $-$3.1\,\% \\
+stained glass & LJF/SISF (75\,min) \checkmark & 2 & $-$0.2\,\% & +28.5\,\% & $-$70.4\,\% \\
+ & LJF/SISF (65\,min) \checkmark & 6 & $-$2.3\,\% & +8.7\,\% & $-$20.4\,\% \\
 \hline
 \end{tabular}
 \end{table}
