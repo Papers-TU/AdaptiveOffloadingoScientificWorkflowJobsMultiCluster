@@ -2,52 +2,55 @@
 \centering
 \begin{tikzpicture}[
   font=\footnotesize, >={Stealth[length=1.3mm]},
-  job/.style={circle, draw=gray!70!black, fill=white, minimum size=5.2mm, inner sep=0pt, font=\tiny},
-  off/.style={job, fill=orange!35, draw=orange!80!black},
-  new/.style={off, very thick},
-  edge/.style={->, gray!70, >={Stealth[length=0.9mm]}},
-  nxt/.style={->, thick, gray!60!black}
+  job/.style={circle, draw=gray!70!black, fill=white, minimum size=6.4mm, inner sep=0pt, font=\tiny},
+  off/.style={fill=green!10},
+  new/.style={draw=orange!70!black, thick},
+  lab/.style={font=\tiny, inner sep=0.5pt, text=gray!40!black},
+  edge/.style={->, gray!70, >={Stealth[length=0.9mm]}}
 ]
-% one snapshot: #1 x-centre, #2-#4 styles of the three middle jobs
+% one snapshot: #1 x-centre, #2-#4 extra styles of j2, j3, j4
 \newcommand{\snapdag}[4]{%
-  \begin{scope}[shift={(#1,1.45)}]
-    \node[job] (s) at (0,0.75) {5};
-    \node[#2]  (a) at (-0.62,0) {30};
-    \node[#3]  (b) at (0,0) {12};
-    \node[#4]  (c) at (0.62,0) {20};
-    \node[job] (t) at (0,-0.75) {8};
+  \begin{scope}[shift={(#1,1.2)}]
+    \node[job] (s) at (0,0.78) {5\,min};
+    \node[job,#2] (a) at (-0.82,0) {30\,min};
+    \node[job,#3] (b) at (0,0) {15\,min};
+    \node[job,#4] (c) at (0.82,0) {20\,min};
+    \node[job] (t) at (0,-0.78) {3\,min};
     \foreach \m in {a,b,c} {\draw[edge] (s) -- (\m); \draw[edge] (\m) -- (t);}
+    \node[lab, anchor=east] at (s.west) {\textit{j}\textsubscript{1}};
+    \node[lab, anchor=east] at (a.west) {\textit{j}\textsubscript{2}};
+    \node[lab, anchor=south west] at (b.north east) {\textit{j}\textsubscript{3}};
+    \node[lab, anchor=west] at (c.east) {\textit{j}\textsubscript{4}};
+    \node[lab, anchor=east] at (t.west) {\textit{j}\textsubscript{5}};
   \end{scope}}
-% makespan bar: #1 x-centre, #2 length, #3 colour, #4 label
-\newcommand{\mkbar}[4]{%
-  \begin{scope}[shift={({#1-1.1},0.2)}]
-    \fill[#3] (0,-0.07) rectangle (#2,0.07);
-    \draw[red!70!black, dashed, thick] (1.6,-0.17) -- (1.6,0.2);
-    \node[font=\tiny, anchor=north west, inner sep=1pt] at (0,-0.08) {#4};
+% makespan bar: #1 x-centre, #2 length (cm), #3 label
+\newcommand{\mkbar}[3]{%
+  \begin{scope}[shift={({#1-1.25},-0.12)}]
+    \fill[blue!18] (0,-0.06) rectangle (#2,0.06);
+    \draw[red!70!black, dashed, thick] (1.26,-0.1) -- (1.26,0.14);
+    \node[font=\tiny, anchor=north west, inner sep=1pt, align=left] at (0,-0.12) {#3};
   \end{scope}}
 
-% strategy strip
-\node[draw, rounded corners=2pt, fill=gray!5, minimum width=8.6cm, minimum height=5.5mm] (strat) at (4.3,2.85) {};
-\node[anchor=west, font=\scriptsize] at (strat.west) {\textbf{Offloading Criterion:}};
-\node[draw=orange!80!black, fill=orange!20, rounded corners=1pt, font=\scriptsize, inner sep=1.5pt] (ljf) at (3.25,2.85) {LJF};
-\node[font=\scriptsize, text=gray, anchor=west] at ($(ljf.east)+(0.05,0)$) {SISF $\mid$ PEFO};
-\node[font=\scriptsize, anchor=east] at ($(strat.east)+(-0.1,0)$) {offloading order: 30 $\succ$ 20 $\succ$ 12};
+% criterion strip (colours as in Fig. 1)
+\node[draw=orange!70!black, dashed, rounded corners=2pt, fill=gray!4, minimum width=8.6cm, minimum height=5.5mm] (strat) at (4.3,2.95) {};
+\node[anchor=west, font=\scriptsize, inner sep=3pt] (lbl) at (strat.west) {\textbf{Criterion:}};
+\node[draw=orange!70!black, fill=orange!12, rounded corners=1pt, font=\scriptsize, inner sep=1.5pt, anchor=west] (ljf) at ($(lbl.east)+(0.02,0)$) {Longest Job First (LJF)};
+\node[font=\scriptsize, text=gray, anchor=west] (rest) at ($(ljf.east)+(0.02,0)$) {SISF\enspace PEFO};
+\node[font=\scriptsize, anchor=east, inner sep=3pt] (ord) at (strat.east) {$j_2 \succ j_4$};
+\draw[->, thick, gray!60!black] ($(rest.east)+(0.05,0)$) -- node[font=\tiny, above, inner sep=1pt] {order} ($(ord.west)+(-0.05,0)$);
 
-\snapdag{1.25}{job}{job}{job}
-\snapdag{4.3}{new}{job}{job}
-\snapdag{7.35}{off}{job}{new}
+\snapdag{1.35}{}{}{}
+\snapdag{4.3}{off,new}{}{}
+\snapdag{7.25}{off}{}{off,new}
 
-\mkbar{1.25}{2.2}{red!45}{makespan 70 $>$ 50}
-\mkbar{4.3}{1.75}{red!45}{makespan 55 $>$ 50}
-\mkbar{7.35}{1.45}{teal!55}{makespan 45 $\le$ 50}
+% 0.0315 cm per minute: 73, 43, 38 min, target 40 min
+\mkbar{1.35}{2.30}{makespan 73 $\scriptscriptstyle>$ target 40}
+\mkbar{4.3}{1.35}{makespan 43 $\scriptscriptstyle>$ target 40}
+\mkbar{7.25}{1.20}{makespan 38 $\scriptscriptstyle\le$ target 40 \textcolor{green!50!black}{\ding{51}}}
 
-\foreach \x/\t in {1.25/start, 4.3/iteration 1, 7.35/iteration 2} \node[font=\tiny\itshape, text=gray!80!black] at (\x-0.95,2.3) {\t};
-\draw[nxt] (2.2,1.45) -- node[font=\tiny, above] {offload} (3.35,1.45);
-\draw[nxt] (5.25,1.45) -- node[font=\tiny, above] {offload} (6.4,1.45);
-
-\node[font=\tiny, red!70!black, anchor=south, inner sep=1pt] at (1.75,0.4) {objective};
-\node[font=\footnotesize, teal!70!black, anchor=west] at (7.92,0.2) {\ding{51}};
+\foreach \x/\t in {1.35/{start (predicted runtimes)}, 4.3/{iteration 1: offload $j_2$}, 7.25/{iteration 2: offload $j_4$}}
+  \node[font=\tiny\itshape, text=gray!30!black, anchor=west] at (\x-1.4,2.5) {\t};
 \end{tikzpicture}
-\caption{Job selection: starting from a DAG annotated with predicted runtimes, the pluggable strategy (here LJF) offloads the next-ranked job and re-simulates the makespan until the objective (here time-to-result) is met.}
+\caption{Job selection with LJF on an example DAG annotated with predicted runtimes. The primary cluster runs one job at a time, while offloaded jobs (green) run in parallel on the secondary cluster. In each iteration, SOU offloads the longest remaining job and re-simulates the makespan until it meets the time-to-result target.}
 \label{fig:approach}
 \end{figure}
