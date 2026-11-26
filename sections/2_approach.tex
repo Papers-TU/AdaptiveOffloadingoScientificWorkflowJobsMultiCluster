@@ -1,7 +1,7 @@
 \input{img/fig_overview}
 
 \paragraph{Workflow Makespan Prediction}
-SOU operates by first predicting job runtimes from historical executions to simulate the federated makespan prior to execution.
+SOU operates by first predicting job runtimes from historical executions~\cite{bader_lotaru_2024, bader_sizey_2024} to simulate the federated makespan prior to execution.
 For each task, we collect the runtimes $\mathcal T$ of its historical jobs and their input size $x$, i.e., the total size of the initial workflow inputs a job and its ancestors consume, obtained by reconstructing the job DAG.
 If $x$ and the runtime show a Pearson correlation of $\rho\geq0.8$, we fit a Bayesian ridge regression $t\sim\mathcal N(\beta_0+\beta_1x,\sigma^2)$ with task-specific intercept $\beta_0$ and coefficient $\beta_1$. Thus,
 \[
