@@ -11,7 +11,7 @@ If $x$ and the runtime show a Pearson correlation of $\rho\geq0.8$, we fit a Bay
 \operatorname{median}(\mathcal T), & \text{otherwise},
 \end{cases}
 \]
-where $\mathcal N(\mu_j,\sigma_j^2)$ is the posterior predictive distribution for $x(j)$ and $q=0.5$ yields its mean, while higher quantiles give more conservative predictions and serve as a lever to meet the time-to-result with higher assurance. The median setup time of the task is added to obtain the simulated runtime.
+where $\mathcal N(\mu_j,\sigma_j^2)$ is the posterior predictive distribution for $x(j)$ and $q=0.5$ yields its mean, while higher quantiles give more conservative predictions and serve as a lever to meet the time-to-result with higher assurance. 
 
 \paragraph{Heuristic Job Offloading Simulation}
 % Algorithm
@@ -21,7 +21,7 @@ Starting without offloading, it simulates the workflow once (lines 1--2). As lon
 \emph{Longest Job First} (LJF) selects the job with the longest predicted runtime $\hat t_q(j)$, as long-running jobs best amortize offloading overheads such as data transfer. \emph{Smallest Input Size First} (SISF) selects the job with the smallest input size $x$ and targets settings where offloading cost grows with data volume. Further criteria can be plugged in.
 Candidates are the jobs that had to wait for resources on the primary cluster in the previous simulation, $J_\mathrm{def}\setminus J_\mathrm{off}$. If no candidate remains before $D$ is met, SOU returns the configuration with the lowest predicted makespan (line 6).
 In each call, \code{Simulate} advances jobs according to their predicted runtimes, running jobs in $J_\mathrm{off}$ on the secondary and all other jobs on the primary cluster (lines 11--12). A job whose resources $\mathbf r(j)$ are not free on its cluster waits and is recorded in $J_\mathrm{def}$ (line 13). The function returns $\hat M$ and $J_\mathrm{def}$ (line 15).
-In the example of Fig.~\ref{fig:approach}, LJF first offloads the job with the longest predicted runtime ($j_2$, 30\,min), which lowers the predicted makespan from 73 to 43\,min. As this still exceeds the target of 40\,min, it additionally offloads the next-longest job ($j_4$, 20\,min) and reaches 38\,min.
+In the example of Fig.~\ref{fig:approach}, LJF first offloads the job with the longest predicted runtime ($j_2$, 30\,min), which lowers the predicted makespan from 73 to 43\,min. As this still exceeds the target of 40\,min, it offloads the next-longest job ($j_4$, 20\,min) and reaches 38\,min.
 In contrast, \emph{Primary Environment Fully Occupied} (PEFO) does not iterate but offloads every job that would have to wait on the primary cluster.
 \input{img/fig_approach}
 
