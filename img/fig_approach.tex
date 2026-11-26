@@ -51,6 +51,6 @@
 \foreach \x/\t in {1.35/{start (predicted runtimes)}, 4.3/{iteration 1: offload $j_2$}, 7.25/{iteration 2: offload $j_4$}}
   \node[font=\tiny\itshape, text=gray!30!black, anchor=west] at (\x-1.4,2.5) {\t};
 \end{tikzpicture}
-\caption{Example: Job selection with LJF on a DAG annotated with predicted runtimes. Simulation on primary cluster runs one job at a time, while offloaded jobs (green) run in parallel on the secondary cluster. In each iteration, SOU offloads the longest remaining job and re-simulates the makespan until it meets the time-to-result target.}
+\caption{Example: Job selection with LJF on a DAG annotated with predicted runtimes. In the simulation, the primary cluster runs one job at a time, while offloaded jobs (green) run in parallel on the secondary cluster. In each iteration, SOU offloads the longest remaining job and re-simulates the makespan until it meets the time-to-result target.}
 \label{fig:approach}
 \end{figure}
