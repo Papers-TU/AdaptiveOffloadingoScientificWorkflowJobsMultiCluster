@@ -1,7 +1,7 @@
 \input{img/fig_overview}
 
 \paragraph{Workflow Makespan Prediction}
-SOU operates by first predicting job runtimes from historical executions~\cite{bader_lotaru_2024, bader_sizey_2024} to simulate the federated makespan prior to execution.
+SOU operates by first predicting job runtimes from historical executions~\cite{bader_lotaru_2024, bader_sizey_2024, balis_evaluation_2023} to simulate the federated makespan prior to execution.
 For each task, we collect the runtimes $\mathcal T$ of its historical jobs and their input size $x$. We define $x$ as the total size of the initial workflow inputs that a job and its ancestors consume, which we obtain by reconstructing the job DAG.
 If $x$ and the runtime show a Pearson correlation of $\rho\geq0.8$, we fit a Bayesian ridge regression $t\sim\mathcal N(\beta_0+\beta_1x,\sigma^2)$ with task-specific intercept $\beta_0$ and coefficient $\beta_1$. Thus,
 \[
@@ -11,7 +11,7 @@ If $x$ and the runtime show a Pearson correlation of $\rho\geq0.8$, we fit a Bay
 \operatorname{median}(\mathcal T), & \text{otherwise},
 \end{cases}
 \]
-where $\mathcal N(\mu_j,\sigma_j^2)$ is the posterior predictive distribution for $x(j)$ and $q=0.5$ yields its mean, while higher quantiles give more conservative predictions and serve as a lever to meet the time-to-result with higher assurance. The median setup time of the task is added to obtain the simulated runtime.
+where $\mathcal N(\mu_j,\sigma_j^2)$ is the posterior predictive distribution for $x(j)$ and $q=0.5$ yields its mean, while higher quantiles give more conservative predictions and serve as a lever to meet the time-to-result with higher assurance~\cite{park_3sigma_2018}. The median setup time of the task is added to obtain the simulated runtime.
 
 \paragraph{Heuristic Job Offloading Simulation}
 % Algorithm
