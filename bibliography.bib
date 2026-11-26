@@ -1,7 +1,6 @@
 @IEEEtranBSTCTL{IEEEexample:BSTcontrol,
   CTLuse_url = "no",
-  CTLmax_names_forced_etal = "3",
-  CTLnames_show_etal = "1"
+  CTLdash_repeated_names = "no"
 }
 
 
@@ -73,7 +72,10 @@ Url2 = {https://openproceedings.org/2021/conf/edbt/p226.pdf}
 
 
 ## Snakemake
-@misc{molder_sustainable_2021,
+@article{molder_sustainable_2021,
+	journal = {F1000Research},
+	volume = {10},
+	pages = {33},
 	title = {Sustainable data analysis with {Snakemake}},
 	copyright = {https://creativecommons.org/licenses/by/4.0/},
 	url = {https://f1000research.com/articles/10-33},
@@ -536,7 +538,6 @@ doi = {10.1109/TCC.2017.2732344}
 	author = {da Silva, Rafael Ferreira and Juve, Gideon and Rynge, Mats and Deelman, Ewa and Livny, Miron},
 	month = sep,
 	year = {2015},
-	note = {Publisher: World Scientific Publishing Co.},
 	keywords = {Scientific workflow, MAPE-K loop, online resource usage task estimation, workflow characterization, !citedBy:Jonathan},
 	pages = {1541003},
 	file = {PDF:/Users/Leon/Zotero/storage/GITEDUPN/da Silva et al. - 2015 - Online Task Resource Consumption Prediction for Scientific Workflows.pdf:application/pdf},
@@ -1398,19 +1399,6 @@ series = {ATEC '05}
     year = {2017},
     keywords = {Algorithm design and analysis, Bandwidth, Big Data, Big data processing, Cloud computing, Distributed databases, Optimization, cloud computing, data movement, online algorithm, virtual machine scheduling},
     pages = {3114--3127},
-}
-@misc{wang_managing_2016,
-    title = {Managing {Deadline}-constrained {Bag}-of-{Tasks} {Jobs} on {Hybrid} {Clouds}},
-    url = {http://arxiv.org/abs/1604.08335},
-    doi = {10.48550/arXiv.1604.08335},
-    abstract = {Outsourcing jobs to a public cloud is a cost-effective way to address the problem of satisfying the peak resource demand when the local cloud has insufficient resources. In this paper, we study on managing deadline-constrained bag-of-tasks jobs on hybrid clouds. We present a binary nonlinear programming (BNP) problem to model the hybrid cloud management where the utilization of physical machines (PMs) in the local cloud/cluster is maximized when the local resources are enough to satisfy the deadline constraints of jobs, while when not, the rent cost from the public cloud is minimized. To solve this BNP problem in polynomial time, we proposed a heuristic algorithm. Its main idea is assigning the task closest to its deadline to current core until the core cannot finish any task within its deadline. When there is no available core, the algorithm adds an available PM with most capacity or rents a new VM with highest cost-performance ratio. Extensive experimental results show that our heuristic algorithm saves 16.2\%-76\% rent cost and improves 47.3\%-182.8\% resource utilizations satisfying deadline constraints, compared with first fit decreasing algorithm.},
-    urldate = {2026-07-01},
-    publisher = {arXiv},
-    author = {Wang, Bo and Song, Ying and Sun, Yuzhong and Liu, Jun},
-    month = apr,
-    year = {2016},
-    note = {arXiv:1604.08335 [cs.DC]},
-    keywords = {Computer Science - Distributed, Parallel, and Cluster Computing},
 }
 @article{joe-wong_interdatacenter_2015,
     title = {Interdatacenter {Job} {Routing} and {Scheduling} {With} {Variable} {Costs} and {Deadlines}},
