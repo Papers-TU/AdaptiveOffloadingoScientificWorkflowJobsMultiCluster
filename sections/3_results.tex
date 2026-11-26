@@ -19,7 +19,7 @@ Offloading once the primary cluster runs out of resources (PEFO) shortens the ma
 \begin{figure}[t]
     \centering
     \includegraphics[width=\columnwidth]{img/evaluation/workflow_offloading_steps_rna-seq-star-deseq2.pdf}
-    \caption{Predicted makespan after each offloading step for rnaseq-star-deseq2, recorded during the job selection that produced the evaluated configurations. Circles mark the configurations selected for each time-to-result target.}
+    \caption{Bayesian predicted makespan after each offloading step for rnaseq-star-deseq2. Circles mark the job sets selected for each time-to-result target.}
     \label{fig:makespan-offloading-dependence}
 \end{figure}
 
@@ -45,7 +45,7 @@ stained glass & LJF/SISF (75\,min) \checkmark & 2 & +1.1\,\% & +28.5\,\% & $-$70
 \end{table}
 
 % Makespan vs. Offloading
-How many jobs are needed depends on the selection criterion, as Fig.~\ref{fig:makespan-offloading-dependence} shows for rnaseq-star-deseq2. Offloading the longest jobs first lowers the makespan right away, so LJF meets the 310\,min target after five jobs. SISF first offloads short jobs with small inputs, so its prediction stays nearly constant for the first 25 jobs and it needs 35 jobs for the same target.
+How many jobs are needed depends on the selection criterion, as Fig.~\ref{fig:makespan-offloading-dependence} shows for rnaseq-star-deseq2. Offloading the longest jobs first lowers the makespan right away, so LJF meets the 310\,min target after five jobs. SISF first offloads short jobs with small inputs, so its prediction stays nearly constant for the first 25 jobs and it needs 26 jobs for the same target.
 
 % Discussion
 Our results show that simulating the makespan before execution lets SOU offload only as many jobs as a given time-to-result requires. Although most targets are met with a clear margin, the single miss occurs when the predicted makespan lies very close to the target. The time-to-result should therefore be understood as a soft constraint, as SOU selects a configuration that is predicted, but not guaranteed, to meet it. Moreover, offloading additional jobs does not always shorten the predicted makespan further (Fig.~\ref{fig:makespan-offloading-dependence}), which shows that the choice of jobs matters more than their number. 
