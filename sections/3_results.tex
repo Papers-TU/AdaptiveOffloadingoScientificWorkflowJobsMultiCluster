@@ -4,7 +4,7 @@
 % Experiments
 We evaluate our approach using two real-world bioinformatics workflows: \textit{rnaseq-star-deseq2}\footnote{\url{https://github.com/snakemake-workflows/rna-seq-star-deseq2}}, which aligns RNA sequencing reads and computes differential gene expression (135 jobs), and \textit{stained glass}\footnote{\url{https://github.com/mrvollger/StainedGlass}}, which computes sequence-identity heatmaps of genome assemblies (44 jobs). Per workflow, we run PEFO as baseline and LJF and SISF with two time-to-result targets each (310 and 250\,min for rnaseq-star-deseq2, 75 and 65\,min for stained glass), where for stained glass LJF and SISF select the same jobs due to its DAG structure.
 
-Table~\ref{tab:results} reports offloaded jobs, prediction error (PE), and makespan and cost changes relative to PEFO. As the Bayesian predictive distributions were narrow, we applied the linear regression model.
+Table~\ref{tab:results} reports offloaded jobs, prediction error (PE), and makespan and cost changes relative to PEFO. As the training data showed little runtime variance, we applied the linear over the Bayesian model to obtain runtime predictions.
 Costs are derived from the runtime and requested vCPUs, memory, and ephemeral storage of each offloaded job, priced at on-demand Google Kubernetes Engine (GKE) Autopilot rates\footnote{\url{https://cloud.google.com/kubernetes-engine/pricing}} as a reference for a commercial secondary environment.
 
 % Infrastructure 
@@ -20,7 +20,7 @@ Overestimation is uncritical for the time-to-result, as both SISF runs still fin
 Trading speed for cost, LJF and SISF reduce the offloading cost by 40.6\,\% compared to PEFO at a 14.8\,\% longer makespan.
 For the 310\,min target of rnaseq-star-deseq2, LJF offloads only five jobs and lowers the cost from \$5.58 to \$2.07. 
 % Makespan vs. Offloading
-As Fig.~\ref{fig:makespan-offloading-dependence} shows, offloading the longest jobs first lowers the predicted makespan right away. SISF first offloads jobs with small inputs, so its prediction stays nearly constant for the first 25 jobs and it needs 35 jobs for the same target. Still, SISF is cheaper than LJF, as cost depends on the runtime and resources of the offloaded jobs rather than their number. With the 250\,min target, SISF even outperforms PEFO in both makespan and cost.
+As Figure~\ref{fig:makespan-offloading-dependence} shows, offloading the longest jobs first lowers the predicted makespan right away. SISF first offloads jobs with small inputs, so its prediction stays nearly constant for the first 25 jobs and it needs 35 jobs for the same target. Still, SISF is cheaper than LJF, as cost depends on the runtime and resources of the offloaded jobs rather than their number. With the 250\,min target, SISF even outperforms PEFO in both makespan and cost.
 
 \begin{figure}[t]
     \centering
@@ -51,8 +51,8 @@ stained glass & LJF/SISF (75\,min) \checkmark & 2 & $-$0.2\,\% & +28.5\,\% & $-$
 \end{table}
 
 % Discussion
-Overall, our results show that simulating the makespan before execution lets SOU offload only as many jobs as a given turnaround time requires. Although most targets are met, the single miss occurs when the predicted makespan lies very close to the target. The time-to-result should therefore be understood as a soft constraint, as SOU selects a configuration that is predicted, but not guaranteed, to meet it. Higher quantiles of the Bayesian model can increase this assurance when the historical data shows sufficient runtime variance. 
+Overall, our results show that simulating the makespan before execution lets SOU offload only as many jobs as a given turnaround time requires. Although most targets are met, the single miss occurs when the predicted makespan lies very close to the target. The time-to-result should therefore be understood as a soft constraint, as SOU selects an offloading set that is predicted, but not guaranteed, to meet it. Higher quantiles of the Bayesian model can increase this assurance when the historical data shows sufficient runtime variance. 
 
-Moreover, offloading additional jobs does not always shorten the predicted makespan further (Fig.~\ref{fig:makespan-offloading-dependence}), which shows that the choice of jobs matters more than their count. 
+Moreover, offloading additional jobs does not always shorten the predicted makespan further (Figure~\ref{fig:makespan-offloading-dependence}), which shows that the choice of jobs matters more than their count. 
 
 Remaining prediction errors mainly stem from resource contention between concurrent jobs, which makes runtimes less predictable. In addition, tasks whose runtime does not correlate with input size fall back to their median runtime, and the simulation does not yet model failed jobs and their retries.
