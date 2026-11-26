@@ -4,7 +4,7 @@
 % Experiments
 We evaluate two real-world bioinformatics workflows: \textit{rnaseq-star-deseq2}\footnote{\url{https://github.com/snakemake-workflows/rna-seq-star-deseq2}}, which aligns RNA sequencing reads and computes differential gene expression (135 jobs), and \textit{stained glass}\footnote{\url{https://github.com/mrvollger/StainedGlass}}, which computes sequence-identity heatmaps of genome assemblies (44 jobs). Per workflow, we run PEFO as baseline and LJF and SISF with two time-to-result targets each (310 and 250\,min for rnaseq-star-deseq2, 75 and 65\,min for stained glass).
 
-Table~\ref{tab:results} reports the number of offloaded jobs $|J_\mathrm{off}|$, the prediction error (PE) of the predicted makespan relative to the observed median makespan, whether the time-to-result target was met, and the offloading cost relative to PEFO.
+Table~\ref{tab:results} reports the number of offloaded jobs $|J_\mathrm{off}|$, the prediction error (PE) of the predicted makespan relative to the observed median makespan, whether the time-to-result target was met, and the change in makespan and offloading cost relative to PEFO.
 We derive costs from the runtime and the requested vCPUs, memory, and ephemeral storage of each offloaded job, priced at on-demand Google Kubernetes Engine (GKE) Autopilot rates\footnote{\url{https://cloud.google.com/kubernetes-engine/pricing}} as a reference for a commercial secondary environment.
 
 % Infrastructure 
@@ -14,7 +14,7 @@ Experiments were conducted on a multi-cluster platform comprising two Kubernetes
 \label{subsec:experimental-results}
 Makespan prediction with the Bayesian median ($q=0.5$) achieves a MAPE of 6.0\,\% for LJF and SISF and 2.6\,\% for PEFO. LJF deviates by at most 3.3\,\%, whereas SISF overestimates the makespan of rnaseq-star-deseq2 by 11.3\,\% and 17.4\,\%.
 Overestimation is uncritical for the time-to-result, as both SISF runs still finish 35 and 37\,min early. Underestimation is not, as LJF with the 250\,min target of rnaseq-star-deseq2 misses it by 6\,min at a prediction error of only $-2.3$\,\%. All other experiments meet their target.
-Offloading once the primary cluster runs out of resources (PEFO) shortens the makespan by 36.5\,\% for rnaseq-star-deseq2 and 31.0\,\% for stained glass, but also incurs the highest offloading cost. LJF and SISF trade part of this speed-up for cost and reduce the offloading cost by 40.1\,\% compared to PEFO at a 14.8\,\% longer makespan. For the 310\,min target of rnaseq-star-deseq2, LJF offloads only five jobs and lowers the cost from \$5.15 to \$2.07. With the 250\,min target, SISF even outperforms PEFO in both makespan and cost.
+Offloading once the primary cluster runs out of resources (PEFO) shortens the makespan by 36.5\,\% for rnaseq-star-deseq2 and 31.0\,\% for stained glass, but also incurs the highest offloading cost. LJF and SISF trade part of this speed-up for cost and reduce the offloading cost by 40.1\,\% compared to PEFO at a 14.8\,\% longer makespan. For the 310\,min target of rnaseq-star-deseq2, LJF offloads only five jobs and lowers the cost from \$5.15 to \$2.07. Cost depends on the runtime and resources of the offloaded jobs rather than their number, as SISF with 35 jobs is cheaper than LJF with five for the 310\,min target. With the 250\,min target, SISF even outperforms PEFO in both makespan and cost.
 
 \begin{figure}[t]
     \centering
