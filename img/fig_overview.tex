@@ -37,7 +37,7 @@
 
 % ---- clusters
 \node[io, fill=green!8] (c1) at (2.0,0.55) {\hspace{9mm}On-premises\\\hspace{9mm}cluster};
-\node[io, fill=green!8] (c2) at (6.6,0.55) {\hspace{9mm}Shared HPC\\\hspace{9mm}or cloud};
+\node[io, fill=green!8] (c2) at (6.6,0.55) {\hspace{9mm}Shared HPC/Cloud\\\hspace{9mm}};
 \foreach \x/\y/\c in {0/0/teal,1/0/violet,2/0/teal,0/1/orange,1/1/teal,2/1/violet}
   \node[job=\c] at ($(0.3,0.45)+(\x*0.23,\y*0.23)$) {};
 \foreach \x/\y/\c in {0/0/violet,1/0/teal,0/1/teal}
