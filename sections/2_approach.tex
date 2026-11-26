@@ -8,21 +8,21 @@ If $x$ and the runtime show a Pearson correlation of $\rho\geq0.8$, we fit a tas
 \hat t_q(j)=
 \begin{cases}
 \mu_j+\Phi^{-1}(q)\,\sigma_j, & \rho\geq0.8,\\
-\operatorname{median}(\mathcal T), & \text{otherwise},
+\operatorname{median}(\mathcal T), & \text{otherwise}.
 \end{cases}
 \]
-where $\mu_j$ is the regression estimate for $x(j)$. Linear regression yields $\sigma_j=0$. For the Bayesian model, $\mathcal N(\mu_j,\sigma_j^2)$ is the posterior predictive distribution, and quantiles $q>0.5$ give more conservative predictions that serve as a lever to meet the time-to-result with higher assurance~\cite{park_3sigma_2018}.
+For the Bayesian model, $\mathcal N(\mu_j,\sigma_j^2)$ is the posterior predictive distribution, and quantiles $q>0.5$ give more conservative predictions that serve as a lever to meet the time-to-result with higher assurance~\cite{park_3sigma_2018}.
 
 \paragraph{Heuristic Job Offloading Simulation}
 % Algorithm
 \input{listings/offloading}
 SOU selects jobs for offloading by simulating the workflow execution with the predicted runtimes (Algorithm~\ref{alg:offloading}). It takes the jobs $J$, the time-to-result target $D$, and a selection criterion $\mathcal{C}$ and returns the set of jobs to offload, as a greedy alternative to searching all $2^{|J|}$ candidate sets.
 Starting without offloading, it simulates the workflow once (lines 1--2). As long as the predicted makespan $\hat M$ exceeds $D$, it selects one more job by $\mathcal{C}$, adds it to $J_\mathrm{off}$, and simulates the workflow again with this job on the secondary cluster (lines 3--5).
-\emph{Longest Job First} (LJF) selects the job with the longest predicted runtime $\hat t_q(j)$, as long-running jobs best amortize offloading overheads such as data transfer. \emph{Smallest Input Size First} (SISF) selects the job with the smallest input size $x$ and targets settings where offloading cost grows with data volume. Further criteria can be plugged in.
+\emph{Longest Job First} (LJF) selects the job with the longest predicted runtime $\hat t_(j)$, as long-running jobs best amortize offloading overheads such as data transfer. \emph{Smallest Input Size First} (SISF) selects the job with the smallest input size $x$ and targets settings where offloading cost grows with data volume. Further criteria can be plugged in.
 Candidates are the jobs that had to wait for resources on the primary cluster in the previous simulation, $J_\mathrm{def}\setminus J_\mathrm{off}$. If no candidate remains before $D$ is met, SOU returns the configuration with the lowest predicted makespan (line 6).
 In each call, \code{Simulate} advances jobs according to their predicted runtimes, running jobs in $J_\mathrm{off}$ on the secondary and all other jobs on the primary cluster (lines 11--12). A job whose resources $\mathbf r(j)$ are not free on its cluster waits and is recorded in $J_\mathrm{def}$ (line 13). The function returns $\hat M$ and $J_\mathrm{def}$ (line 15).
-In the example of Fig.~\ref{fig:approach}, LJF first offloads the job with the longest predicted runtime ($j_2$, 30\,min), which lowers the predicted makespan from 73 to 43\,min. As this still exceeds the target of 40\,min, it offloads the next-longest job ($j_4$, 20\,min) and reaches 38\,min.
-In contrast, \emph{Primary Environment Fully Occupied} (PEFO) does not iterate but offloads every job that would have to wait on the primary cluster.
+Illustrated in Figure~\ref{fig:approach}, LJF first offloads the job with the longest predicted runtime ($j_2$, 30\,min), which lowers the predicted makespan from 73 to 43\,min. As this still exceeds the target of 40\,min, it offloads the next-longest job ($j_4$, 20\,min) and reaches 38\,min.
+Compared to LJF and SISF, \emph{Primary Environment Fully Occupied} (PEFO) naively offloads every job that would have to wait on the primary cluster.
 \input{img/fig_approach}
 
 
