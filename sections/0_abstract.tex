@@ -3,7 +3,7 @@ Offloading jobs across multiple clusters can alleviate resource constraints and 
 
 This paper presents SOU, a middleware that offloads jobs across federated compute clusters. 
 
-We propose an offloading heuristic based on a two-step prediction approach. First, a Bayesian regression model trained on historical executions predicts individual job runtimes. Second, a workflow simulation estimates the makespan of alternative offloading configurations, selecting jobs by predicted runtime or input data size until a user-defined time-to-result is met. SOU then submits the workflow for execution.
+We propose an offloading heuristic based on a two-step prediction approach. First, a Bayesian regression model trained on historical executions predicts individual job runtimes. Second, a workflow simulation estimates the makespan of alternative offloading configurations, selecting jobs by predicted runtime or input data size until a user-defined time-to-result is met.
 
 The method is implemented as an extension of the Snakemake workflow management system and is evaluated with two real-world bioinformatic workflows. 
 
