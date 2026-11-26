@@ -63,6 +63,6 @@
 \draw[->] (c1 |- ex.south) -- node[font=\scriptsize\itshape, right] {local jobs} (c1);
 \draw[->] (c2 |- ex.south) -- node[font=\scriptsize\itshape, right] {offloaded jobs} (c2);
 \end{tikzpicture}
-\caption{SOU overview: predicted job runtimes drive a makespan simulation in which a pluggable offloading criterion selects jobs for the secondary cluster until the user-defined time-to-result is met.}
+\caption{SOU overview: predicted job runtimes drive a makespan simulation in which a pluggable criterion selects jobs to offload until the time-to-result is met. Snakemake then dispatches all jobs to both clusters.}
 \label{fig:intro}
 \end{figure}
