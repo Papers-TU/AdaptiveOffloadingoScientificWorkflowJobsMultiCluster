@@ -4,7 +4,8 @@
 % Experiments
 We evaluate our approach using two real-world bioinformatics workflows: \textit{rnaseq-star-deseq2}\footnote{\url{https://github.com/snakemake-workflows/rna-seq-star-deseq2}}, which aligns RNA sequencing reads and computes differential gene expression (135 jobs), and \textit{stained glass}\footnote{\url{https://github.com/mrvollger/StainedGlass}}, which computes sequence-identity heatmaps of genome assemblies (44 jobs). Per workflow, we run PEFO as baseline and LJF and SISF with two time-to-result targets each (310 and 250\,min for rnaseq-star-deseq2, 75 and 65\,min for stained glass), where for stained glass LJF and SISF select the same jobs due to its DAG structure.
 
-Table~\ref{tab:results} reports offloaded jobs, prediction error (PE), and makespan and cost changes relative to PEFO. As the training data showed little runtime variance, we applied the linear over the Bayesian model to obtain runtime predictions.
+Table~\ref{tab:results} reports offloaded jobs, prediction error (PE), and makespan and cost changes relative to PEFO. As the training data showed little runtime variance, we used linear regression instead of the Bayesian model to obtain runtime predictions.
+
 Costs are derived from the runtime and requested vCPUs, memory, and ephemeral storage of each offloaded job, priced at on-demand Google Kubernetes Engine (GKE) Autopilot rates\footnote{\url{https://cloud.google.com/kubernetes-engine/pricing}} as a reference for a commercial secondary environment.
 
 % Infrastructure 

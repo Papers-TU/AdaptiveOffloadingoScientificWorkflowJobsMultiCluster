@@ -1,7 +1,10 @@
-Scientific workflows require substantial computational resources, while scientists expect their results to be available in short turnaround times. As such workloads can exceed the capacity of a single compute cluster, offloading jobs across multiple clusters can alleviate resource constraints and shorten execution time while controlling cost. 
+Scientific workflows require substantial computational resources, while scientists expect their results to be available in short turnaround times. 
+As such workloads can exceed the capacity of a single compute cluster, offloading jobs across multiple clusters can alleviate resource constraints and shorten execution time while controlling cost. 
 
-We propose an offloading heuristic based on a two-step prediction approach. First, a regression model trained on historical executions predicts individual job runtimes. Second, a workflow simulation iteratively offloads jobs, selected by predicted runtime or input data size, until the predicted makespan meets a user-defined time-to-result.
+We propose an offloading heuristic that runs prior to execution and computes job placement in two prediction steps. First, a regression model trained on historical executions predicts job runtimes. Second, a workflow simulation predicts the makespan until a user-defined time-to-result is met, by iteratively offloading jobs based on their runtime or input data size.
 
 We implement our method as SOU, an extension of the Snakemake workflow management system, and evaluate it with two real-world bioinformatics workflows.
 
-Our evaluation shows that SOU predicts the makespan with an average error of 5.9\%, so that offloading selected jobs lets the workflows meet their time constraints in almost every case at 40.6\% lower cost than naive offloading.
+Our evaluation shows that SOU accurately simulates workflow makespan across clusters with an average error of 5.9\%. As a result, workflows meet their time constraints in almost every case at 40.6\% lower cost than naive offloading.
+
+
